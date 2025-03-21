@@ -7,6 +7,8 @@ import { StyleContext } from '../../context/Style/index.js';
 import { useTranslation } from 'react-i18next';
 
 const Home = () => {
+  // pfee 隐藏首页内容
+  return <></>
   const { t, i18n } = useTranslation();
   const [statusState] = useContext(StatusContext);
   const [homePageContentLoaded, setHomePageContentLoaded] = useState(false);
