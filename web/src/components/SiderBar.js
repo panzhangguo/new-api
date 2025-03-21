@@ -213,16 +213,16 @@ const SiderBar = () => {
         icon: <IconUser />,
       },
       {
-        text: t('系统设置'),
-        itemKey: 'setting',
-        to: '/setting',
-        icon: <IconSetting />,
-      },
-      {
         text: t('组织管理'),
         itemKey: 'company',
         to: '/company',
         icon: <IconUserGroup />,
+      },
+      {
+        text: t('系统设置'),
+        itemKey: 'setting',
+        to: '/setting',
+        icon: <IconSetting />,
       },
     ],
     [isAdmin(), t],
