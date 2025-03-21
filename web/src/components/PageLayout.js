@@ -62,7 +62,7 @@ const PageLayout = () => {
     if (savedLang) {
       i18n.changeLanguage(savedLang);
     }
-    
+
     // 默认显示侧边栏
     styleDispatch({ type: 'SET_SIDER', payload: true });
   }, [i18n]);
@@ -71,25 +71,25 @@ const PageLayout = () => {
   const isSidebarCollapsed = localStorage.getItem('default_collapse_sidebar') === 'true';
 
   return (
-    <Layout style={{ 
-      height: '100vh', 
-      display: 'flex', 
+    <Layout style={{
+      height: '100vh',
+      display: 'flex',
       flexDirection: 'column',
       overflow: styleState.isMobile ? 'visible' : 'hidden'
     }}>
-      <Header style={{ 
-        padding: 0, 
-        height: 'auto', 
-        lineHeight: 'normal', 
+      <Header style={{
+        padding: 0,
+        height: 'auto',
+        lineHeight: 'normal',
         position: styleState.isMobile ? 'sticky' : 'fixed',
-        width: '100%', 
-        top: 0, 
+        width: '100%',
+        top: 0,
         zIndex: 100,
         boxShadow: '0 1px 6px rgba(0, 0, 0, 0.08)'
       }}>
         <HeaderBar />
       </Header>
-      <Layout style={{ 
+      <Layout style={{
         marginTop: styleState.isMobile ? '0' : '56px',
         height: styleState.isMobile ? 'auto' : 'calc(100vh - 56px)',
         overflow: styleState.isMobile ? 'visible' : 'auto',
@@ -111,7 +111,7 @@ const PageLayout = () => {
             <SiderBar />
           </Sider>
         )}
-        <Layout style={{ 
+        <Layout style={{
           marginLeft: styleState.isMobile ? '0' : (styleState.showSider ? (styleState.siderCollapsed ? '60px' : '256px') : '0'), // pfee 宽度更改
           transition: 'margin-left 0.3s ease',
           flex: '1 1 auto',
@@ -119,23 +119,26 @@ const PageLayout = () => {
           flexDirection: 'column'
         }}>
           <Content
-            style={{ 
+            style={{
               flex: '1 0 auto',
               overflowY: styleState.isMobile ? 'visible' : 'auto',
               WebkitOverflowScrolling: 'touch',
-              padding: styleState.shouldInnerPadding? '24px': '0',
+              padding: styleState.shouldInnerPadding ? '24px' : '0',
               position: 'relative',
               marginTop: styleState.isMobile ? '2px' : '0',
             }}
           >
             <App />
           </Content>
-          <Layout.Footer style={{ 
-            flex: '0 0 auto',
-            width: '100%'
-          }}>
-            <FooterBar />
-          </Layout.Footer>
+          {/* pfee 隐藏footer */}
+          {
+            false && <Layout.Footer style={{
+              flex: '0 0 auto',
+              width: '100%'
+            }}>
+              <FooterBar />
+            </Layout.Footer>
+          }
         </Layout>
       </Layout>
       <ToastContainer />
