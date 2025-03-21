@@ -157,7 +157,8 @@ code {
 
 /* 自定义侧边栏按钮悬停效果 */
 .semi-navigation-item:hover {
-  transform: translateX(2px);
+  /* pfee 调整样式 */
+  /* transform: translateX(2px); */
   box-shadow: 0 2px 8px rgba(var(--semi-color-primary-rgb), 0.2);
 }
 

@@ -26,7 +26,8 @@ import {
   IconLayers,
   IconPriceTag,
   IconSetting,
-  IconUser
+  IconUser,
+  IconUserGroup
 } from '@douyinfe/semi-icons';
 import { Avatar, Dropdown, Layout, Nav, Switch, Divider } from '@douyinfe/semi-ui';
 import { setStatusData } from '../helpers/data.js';
@@ -79,6 +80,7 @@ const routerMap = {
   task: '/task',
   playground: '/playground',
   personal: '/personal',
+  company: '/company'
 };
 
 const SiderBar = () => {
@@ -100,7 +102,7 @@ const SiderBar = () => {
   // 预先计算所有可能的图标样式
   const allItemKeys = useMemo(() => {
     const keys = ['home', 'channel', 'token', 'redemption', 'topup', 'user', 'log', 'midjourney',
-                 'setting', 'about', 'chat', 'detail', 'pricing', 'task', 'playground', 'personal'];
+      'setting', 'about', 'chat', 'detail', 'pricing', 'task', 'playground', 'personal'];
     // 添加聊天项的keys
     for (let i = 0; i < chatItems.length; i++) {
       keys.push('chat' + i);
@@ -216,6 +218,12 @@ const SiderBar = () => {
         to: '/setting',
         icon: <IconSetting />,
       },
+      {
+        text: t('组织管理'),
+        itemKey: 'company',
+        to: '/company',
+        icon: <IconUserGroup />,
+      },
     ],
     [isAdmin(), t],
   );
@@ -243,13 +251,13 @@ const SiderBar = () => {
   // Function to update router map with chat routes
   const updateRouterMapWithChats = (chats) => {
     const newRouterMap = { ...routerMap };
-    
+
     if (Array.isArray(chats) && chats.length > 0) {
       for (let i = 0; i < chats.length; i++) {
         newRouterMap['chat' + i] = '/chat/' + i;
       }
     }
-    
+
     setRouterMapState(newRouterMap);
     return newRouterMap;
   };
@@ -272,7 +280,7 @@ const SiderBar = () => {
             chatItems.push(chat);
           }
           setChatItems(chatItems);
-          
+
           // Update router map with chat routes
           updateRouterMapWithChats(chats);
         }
@@ -328,7 +336,7 @@ const SiderBar = () => {
     <>
       <Nav
         className="custom-sidebar-nav"
-        style={{ 
+        style={{
           width: isCollapsed ? '60px' : '256px', // pfee 宽度更改
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
           borderRight: '1px solid var(--semi-color-border)',
@@ -384,12 +392,12 @@ const SiderBar = () => {
           } else {
             styleDispatch({ type: 'SET_INNER_PADDING', payload: true });
           }
-          
+
           // 如果点击的是已经展开的子菜单的父项，则收起子菜单
           if (openedKeys.includes(key.itemKey)) {
             setOpenedKeys(openedKeys.filter(k => k !== key.itemKey));
           }
-          
+
           setSelectedKeys([key.itemKey]);
         }}
         openKeys={openedKeys}
@@ -482,13 +490,12 @@ const SiderBar = () => {
             paddingBottom: styleState?.isMobile ? '112px' : '',
           }}
           collapseButton={true}
-          collapseText={(collapsed)=>
-            {
-              if(collapsed){
-                return t('展开侧边栏')
-              }
-                return t('收起侧边栏')
+          collapseText={(collapsed) => {
+            if (collapsed) {
+              return t('展开侧边栏')
             }
+            return t('收起侧边栏')
+          }
           }
         />
       </Nav>
