@@ -56,7 +56,8 @@ const Playground = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [userState, userDispatch] = useContext(UserContext);
   const [status, setStatus] = useState({});
-  const [systemPrompt, setSystemPrompt] = useState('You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.');
+  // pfee 修改提示词
+  const [systemPrompt, setSystemPrompt] = useState('你是一个乐于助人的助手。你可以通过回答我的问题来帮助我。您也可以向我提问。');
   const [message, setMessage] = useState(defaultMessage);
   const [models, setModels] = useState([]);
   const [groups, setGroups] = useState([]);
@@ -348,8 +349,9 @@ const Playground = () => {
               autoComplete='new-password'
               optionList={models}
             />
-            <div style={{ marginTop: 10 }}>
-              <Typography.Text strong>Temperature：</Typography.Text>
+            <div style={{ marginTop: 10 }}> 
+              {/* pfee 修改提示词 */}
+              <Typography.Text strong>温度(Temperature)：</Typography.Text> 
             </div>
             <Slider
               step={0.1}
@@ -361,7 +363,8 @@ const Playground = () => {
               }}
             />
             <div style={{ marginTop: 10 }}>
-              <Typography.Text strong>MaxTokens：</Typography.Text>
+              {/* pfee 修改提示词 */}
+              <Typography.Text strong>最大Tokens：</Typography.Text>
             </div>
             <Input
               placeholder='MaxTokens'
@@ -376,7 +379,8 @@ const Playground = () => {
             />
 
             <div style={{ marginTop: 10 }}>
-              <Typography.Text strong>System：</Typography.Text>
+              {/* pfee 修改提示词 */}
+              <Typography.Text strong>系统提示：</Typography.Text>
             </div>
             <TextArea
               placeholder='System Prompt'

@@ -112,7 +112,7 @@ const PageLayout = () => {
           </Sider>
         )}
         <Layout style={{ 
-          marginLeft: styleState.isMobile ? '0' : (styleState.showSider ? (styleState.siderCollapsed ? '60px' : '200px') : '0'),
+          marginLeft: styleState.isMobile ? '0' : (styleState.showSider ? (styleState.siderCollapsed ? '60px' : '256px') : '0'), // pfee 宽度更改
           transition: 'margin-left 0.3s ease',
           flex: '1 1 auto',
           display: 'flex',

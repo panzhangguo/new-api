@@ -136,20 +136,22 @@ const HeaderBar = () => {
       to: '/pricing',
       icon: <IconPriceTag style={headerIconStyle} />,
     },
+    // pfee 不显示关于页
     // Only include the docs button if docsLink exists
-    ...(docsLink ? [{
-      text: t('文档'),
-      itemKey: 'docs',
-      isExternal: true,
-      externalLink: docsLink,
-      icon: <IconHelpCircle style={headerIconStyle} />,
-    }] : []),
-    {
-      text: t('关于'),
-      itemKey: 'about',
-      to: '/about',
-      icon: <IconInfoCircle style={headerIconStyle} />,
-    },
+    // ...(docsLink ? [{
+    //   text: t('文档'),
+    //   itemKey: 'docs',
+    //   isExternal: true,
+    //   externalLink: docsLink,
+    //   icon: <IconHelpCircle style={headerIconStyle} />,
+    // }] : []),
+    // pfee 不显示关于页
+    // {
+    //   text: t('关于'),
+    //   itemKey: 'about',
+    //   to: '/about',
+    //   icon: <IconInfoCircle style={headerIconStyle} />,
+    // },
   ];
 
   async function logout() {
@@ -267,23 +269,23 @@ const HeaderBar = () => {
             }}
             selectedKeys={[]}
             // items={headerButtons}
-            onSelect={(key) => {}}
-            header={styleState.isMobile?{
+            onSelect={(key) => { }}
+            header={styleState.isMobile ? {
               logo: (
                 <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
                   {
                     !styleState.showSider ?
                       <Button icon={<IconMenu />} theme="light" aria-label={t('展开侧边栏')} onClick={
                         () => styleDispatch({ type: 'SET_SIDER', payload: true })
-                      } />:
+                      } /> :
                       <Button icon={<IconIndentLeft />} theme="light" aria-label={t('闭侧边栏')} onClick={
                         () => styleDispatch({ type: 'SET_SIDER', payload: false })
                       } />
                   }
                   {(isSelfUseMode || isDemoSiteMode) && (
-                    <Tag 
+                    <Tag
                       color={isSelfUseMode ? 'purple' : 'blue'}
-                      style={{ 
+                      style={{
                         position: 'absolute',
                         top: '-8px',
                         right: '-15px',
@@ -300,7 +302,7 @@ const HeaderBar = () => {
                   )}
                 </div>
               ),
-            }:{
+            } : {
               logo: (
                 <div style={logoStyle}>
                   <img src={logo} alt='logo' style={{ height: '28px' }} />
@@ -310,12 +312,12 @@ const HeaderBar = () => {
                 <div style={{ position: 'relative', display: 'inline-block' }}>
                   <span style={systemNameStyle}>{systemName}</span>
                   {(isSelfUseMode || isDemoSiteMode) && (
-                    <Tag 
+                    <Tag
                       color={isSelfUseMode ? 'purple' : 'blue'}
-                      style={{ 
-                        position: 'absolute', 
-                        top: '-10px', 
-                        right: '-25px', 
+                      style={{
+                        position: 'absolute',
+                        top: '-10px',
+                        right: '-25px',
                         fontSize: '0.7rem',
                         padding: '0 4px',
                         whiteSpace: 'nowrap',
@@ -351,7 +353,7 @@ const HeaderBar = () => {
                 <>
                   <Switch
                     checkedText='🌞'
-                    size={styleState.isMobile?'default':'large'}
+                    size={styleState.isMobile ? 'default' : 'large'}
                     checked={theme === 'dark'}
                     uncheckedText='🌙'
                     style={switchStyle}
@@ -360,30 +362,37 @@ const HeaderBar = () => {
                     }}
                   />
                 </>
-                <Dropdown
-                  position='bottomRight'
-                  render={
-                    <Dropdown.Menu style={dropdownStyle}>
-                      <Dropdown.Item
-                        onClick={() => handleLanguageChange('zh')}
-                        type={currentLang === 'zh' ? 'primary' : 'tertiary'}
+                {
+                  // pfee 隐藏国际化
+                  false && (
+                    <>
+                      <Dropdown
+                        position='bottomRight'
+                        render={
+                          <Dropdown.Menu style={dropdownStyle}>
+                            <Dropdown.Item
+                              onClick={() => handleLanguageChange('zh')}
+                              type={currentLang === 'zh' ? 'primary' : 'tertiary'}
+                            >
+                              中文
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              onClick={() => handleLanguageChange('en')}
+                              type={currentLang === 'en' ? 'primary' : 'tertiary'}
+                            >
+                              English
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        }
                       >
-                        中文
-                      </Dropdown.Item>
-                      <Dropdown.Item
-                        onClick={() => handleLanguageChange('en')}
-                        type={currentLang === 'en' ? 'primary' : 'tertiary'}
-                      >
-                        English
-                      </Dropdown.Item>
-                    </Dropdown.Menu>
-                  }
-                >
-                  <Nav.Item
-                    itemKey={'language'}
-                    icon={<IconLanguage style={headerIconStyle} />}
-                  />
-                </Dropdown>
+                        <Nav.Item
+                          itemKey={'language'}
+                          icon={<IconLanguage style={headerIconStyle} />}
+                        />
+                      </Dropdown>
+                    </>
+                  )
+                }
                 {userState.user ? (
                   <>
                     <Dropdown
@@ -401,14 +410,14 @@ const HeaderBar = () => {
                       >
                         {userState.user.username[0]}
                       </Avatar>
-                      {styleState.isMobile?null:<Text style={{ marginLeft: '4px', fontWeight: '500' }}>{userState.user.username}</Text>}
+                      {styleState.isMobile ? null : <Text style={{ marginLeft: '4px', fontWeight: '500' }}>{userState.user.username}</Text>}
                     </Dropdown>
                   </>
                 ) : (
                   <>
                     <Nav.Item
                       itemKey={'login'}
-                      text={!styleState.isMobile?t('登录'):null}
+                      text={!styleState.isMobile ? t('登录') : null}
                       icon={<IconUser style={headerIconStyle} />}
                     />
                     {

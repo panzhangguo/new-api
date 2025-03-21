@@ -223,17 +223,19 @@ const SiderBar = () => {
   const chatMenuItems = useMemo(
     () => [
       {
-        text: 'Playground',
+        // pfee 重命名
+        text: '试验场',
         itemKey: 'playground',
         to: '/playground',
         icon: <IconCommentStroked />,
       },
-      {
-        text: t('聊天'),
-        itemKey: 'chat',
-        items: chatItems,
-        icon: <IconComment />,
-      },
+      // pfee 隐藏聊天功能
+      // {
+      //   text: t('聊天'),
+      //   itemKey: 'chat',
+      //   items: chatItems,
+      //   icon: <IconComment />,
+      // },
     ],
     [chatItems, t],
   );
@@ -327,7 +329,7 @@ const SiderBar = () => {
       <Nav
         className="custom-sidebar-nav"
         style={{ 
-          width: isCollapsed ? '60px' : '200px',
+          width: isCollapsed ? '60px' : '256px', // pfee 宽度更改
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
           borderRight: '1px solid var(--semi-color-border)',
           background: 'var(--semi-color-bg-1)',
