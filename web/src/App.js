@@ -25,7 +25,7 @@ import Task from "./pages/Task/index.js";
 import Playground from './pages/Playground/Playground.js';
 import OAuth2Callback from "./components/OAuth2Callback.js";
 import PersonalSetting from './components/PersonalSetting.js';
-import Company from './pages/Company/index.js';
+import Tenant from './pages/Tenant/index.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -271,7 +271,7 @@ function App() {
           element={
             <PrivateRoute>
               <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Company />
+                <Tenant />
               </Suspense>
             </PrivateRoute>
           }

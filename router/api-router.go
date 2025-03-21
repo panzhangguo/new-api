@@ -34,6 +34,17 @@ func SetApiRouter(router *gin.Engine) {
 		apiRouter.GET("/oauth/telegram/login", middleware.CriticalRateLimit(), controller.TelegramLogin)
 		apiRouter.GET("/oauth/telegram/bind", middleware.CriticalRateLimit(), controller.TelegramBind)
 
+		// pfee 添加租户接口入口
+		tenantRoute := apiRouter.Group("/tenant")
+		tenantRoute.Use(middleware.AdminAuth())
+		{
+			tenantRoute.POST("", controller.CreateUser)
+			tenantRoute.GET("/:id", controller.GetUser)
+			tenantRoute.PUT("/:id", controller.UpdateUser)
+			tenantRoute.DELETE("/:id", controller.DeleteUser)
+			tenantRoute.GET("", controller.GetAllUsers)
+		}
+
 		userRoute := apiRouter.Group("/user")
 		{
 			userRoute.POST("/register", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.Register)
