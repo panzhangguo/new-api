@@ -16,6 +16,7 @@ import { API, showError, showSuccess } from '../helpers';
 import SettingsChats from '../pages/Setting/Operation/SettingsChats.js';
 import { useTranslation } from 'react-i18next';
 import ModelRatioNotSetEditor from '../pages/Setting/Operation/ModelRationNotSetEditor.js';
+import { isOperationChatsShow, isOperationDrawingShow, isOperationGenerateShow } from '../expand/config.js';
 
 const OperationSetting = () => {
   const { t } = useTranslation();
@@ -116,12 +117,12 @@ const OperationSetting = () => {
   return (
     <>
       <Spin spinning={loading} size='large'>
-        {/* 通用设置 */}
-        <Card style={{ marginTop: '10px' }}>
+        {/* 通用设置  pfee 隐藏 */}
+        <Card style={{ marginTop: '10px', display: isOperationGenerateShow ? 'flex' : 'none' }}>
           <SettingsGeneral options={inputs} refresh={onRefresh} />
         </Card>
-        {/* 绘图设置 */}
-        <Card style={{ marginTop: '10px' }}>
+        {/* 绘图设置  pfee 隐藏 */}
+        <Card style={{ marginTop: '10px', display: isOperationDrawingShow ? 'flex' : 'none' }}>
           <SettingsDrawing options={inputs} refresh={onRefresh} />
         </Card>
         {/* 屏蔽词过滤设置 */}
@@ -144,8 +145,8 @@ const OperationSetting = () => {
         <Card style={{ marginTop: '10px' }}>
           <SettingsCreditLimit options={inputs} refresh={onRefresh} />
         </Card>
-        {/* 聊天设置 */}
-        <Card style={{ marginTop: '10px' }}>
+        {/* 聊天设置  pfee 隐藏*/}
+        <Card style={{ marginTop: '10px', display: isOperationChatsShow ? 'flex' : 'none' }}>
           <SettingsChats options={inputs} refresh={onRefresh} />
         </Card>
         {/* 分组倍率设置 */}

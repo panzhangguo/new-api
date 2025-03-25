@@ -10,6 +10,7 @@ import PersonalSetting from '../../components/PersonalSetting';
 import OperationSetting from '../../components/OperationSetting';
 import RateLimitSetting from '../../components/RateLimitSetting.js';
 import ModelSetting from '../../components/ModelSetting.js';
+import { isModelSettingShow, isOtherSettingShow, isSystemSettingShow } from '../../expand/config.js';
 
 const Setting = () => {
   const { t } = useTranslation();
@@ -29,17 +30,17 @@ const Setting = () => {
       content: <RateLimitSetting />,
       itemKey: 'ratelimit',
     });
-    panes.push({
+    isModelSettingShow && panes.push({
       tab: t('模型相关设置'),
       content: <ModelSetting />,
       itemKey: 'models',
     });
-    panes.push({
+    isSystemSettingShow && panes.push({
       tab: t('系统设置'),
       content: <SystemSetting />,
       itemKey: 'system',
     });
-    panes.push({
+    isOtherSettingShow && panes.push({
       tab: t('其他设置'),
       content: <OtherSetting />,
       itemKey: 'other',

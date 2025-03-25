@@ -1,0 +1,6 @@
+<service>
+  <id>wrap-new-api</id>
+  <name>wrap-new-api</name>
+  <description>new-api web server</description>
+  <executable>D:\new-api\new-api.exe</executable>
+</service>

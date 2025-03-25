@@ -29,6 +29,7 @@ import { stringToColor } from '../helpers/render';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import { StyleContext } from '../context/Style/index.js';
 import { StatusContext } from '../context/Status/index.js';
+import { isThemeBtnShow } from '../expand/config.js';
 
 // 自定义顶部栏样式
 const headerStyle = {
@@ -350,18 +351,20 @@ const HeaderBar = () => {
                   </Dropdown>
                 )}
                 {/* <Nav.Item itemKey={'about'} icon={<IconHelpCircle />} /> */}
-                <>
-                  <Switch
-                    checkedText='🌞'
-                    size={styleState.isMobile ? 'default' : 'large'}
-                    checked={theme === 'dark'}
-                    uncheckedText='🌙'
-                    style={switchStyle}
-                    onChange={(checked) => {
-                      setTheme(checked);
-                    }}
-                  />
-                </>
+                {
+                  isThemeBtnShow && <>
+                    <Switch
+                      checkedText='🌞'
+                      size={styleState.isMobile ? 'default' : 'large'}
+                      checked={theme === 'dark'}
+                      uncheckedText='🌙'
+                      style={switchStyle}
+                      onChange={(checked) => {
+                        setTheme(checked);
+                      }}
+                    />
+                  </>
+                }
                 {
                   // pfee 隐藏国际化
                   false && (

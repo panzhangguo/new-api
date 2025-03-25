@@ -9,7 +9,7 @@ export const useSetTheme = () => useContext(SetThemeContext);
 export const ThemeProvider = ({ children }) => {
   const [theme, _setTheme] = useState(() => {
     try {
-      return localStorage.getItem('theme-mode') || null;
+      return localStorage.getItem('theme-mode') || 'dark';  // pfee 默认为暗黑模式
     } catch {
       return null;
     }

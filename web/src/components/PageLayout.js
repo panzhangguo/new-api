@@ -96,7 +96,8 @@ const PageLayout = () => {
         display: 'flex',
         flexDirection: 'column'
       }}>
-        {styleState.showSider && (
+        {/* pfee 未登录用户隐藏侧边栏 */}
+        {userState.user && styleState.showSider && (
           <Sider style={{
             position: 'fixed',
             left: 0,
@@ -112,7 +113,7 @@ const PageLayout = () => {
           </Sider>
         )}
         <Layout style={{
-          marginLeft: styleState.isMobile ? '0' : (styleState.showSider ? (styleState.siderCollapsed ? '60px' : '256px') : '0'), // pfee 宽度更改
+          marginLeft: styleState.isMobile ? '0' : (styleState.showSider && userState.user ? (styleState.siderCollapsed ? '60px' : '256px') : '0'), // pfee 宽度更改
           transition: 'margin-left 0.3s ease',
           flex: '1 1 auto',
           display: 'flex',

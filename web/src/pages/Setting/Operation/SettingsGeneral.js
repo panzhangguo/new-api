@@ -84,6 +84,7 @@ export default function GeneralSettings(props) {
         <Banner
           type='warning'
           description={t('聊天链接功能已经弃用，请使用下方聊天设置功能')}
+          style={{ display: 'none' }} // pfee 隐藏提醒
         />
         <Form
           values={inputs}

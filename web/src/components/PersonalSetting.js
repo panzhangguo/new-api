@@ -39,6 +39,7 @@ import {
 } from '../helpers/render';
 import TelegramLoginButton from 'react-telegram-login';
 import { useTranslation } from 'react-i18next';
+import { isOperationChatsShow, isPersinoalInviteShow, isPersionalEmailShow, isPersionalGenerateAccessTokenShow, isPersionalGithubShow, isPersionalLinuxDOShow, isPersionalNotificationShow, isPersionalOIDCShow, isPersionalTelegramShow, isPersionalWecharShow } from '../expand/config';
 
 const PersonalSetting = () => {
     const [userState, userDispatch] = useContext(UserContext);
@@ -513,7 +514,7 @@ const PersonalSetting = () => {
                             </Descriptions>
                         </Card>
                         <Card
-                            style={{marginTop: 10}}
+                            style={{marginTop: 10,display: isPersinoalInviteShow ? 'block' : 'none'}}
                             footer={
                                 <div>
                                     <Typography.Text>{t('邀请链接')}</Typography.Text>
@@ -553,7 +554,7 @@ const PersonalSetting = () => {
                         </Card>
                         <Card style={{marginTop: 10}}>
                             <Typography.Title heading={6}>{t('个人信息')}</Typography.Title>
-                            <div style={{marginTop: 20}}>
+                            <div style={{marginTop: 20,display: isPersionalEmailShow ? 'block' : 'none'}}>
                                 <Typography.Text strong>{t('邮箱')}</Typography.Text>
                                 <div
                                     style={{display: 'flex', justifyContent: 'space-between'}}
@@ -581,7 +582,7 @@ const PersonalSetting = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{marginTop: 10}}>
+                            <div style={{marginTop: 10,display: isPersionalWecharShow ? 'block' : 'none'}}>
                                 <Typography.Text strong>{t('微信')}</Typography.Text>
                                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
                                     <div>
@@ -610,7 +611,7 @@ const PersonalSetting = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{marginTop: 10}}>
+                            <div style={{marginTop: 10,display: isPersionalGithubShow ? 'block' : 'none'}}>
                                 <Typography.Text strong>{t('GitHub')}</Typography.Text>
                                 <div
                                     style={{display: 'flex', justifyContent: 'space-between'}}
@@ -640,7 +641,7 @@ const PersonalSetting = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{marginTop: 10}}>
+                            <div style={{marginTop: 10,display: isPersionalOIDCShow ? 'block' : 'none'}}>
                                 <Typography.Text strong>{t('OIDC')}</Typography.Text>
                                 <div
                                     style={{display: 'flex', justifyContent: 'space-between'}}
@@ -670,7 +671,7 @@ const PersonalSetting = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{marginTop: 10}}>
+                            <div style={{marginTop: 10,display: isPersionalTelegramShow ? 'block' : 'none'}}>
                                 <Typography.Text strong>{t('Telegram')}</Typography.Text>
                                 <div
                                     style={{display: 'flex', justifyContent: 'space-between'}}
@@ -701,7 +702,7 @@ const PersonalSetting = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{marginTop: 10}}>
+                            <div style={{marginTop: 10,display: isPersionalLinuxDOShow ? 'block' : 'none'}}>
                                 <Typography.Text strong>{t('LinuxDO')}</Typography.Text>
                                 <div
                                     style={{display: 'flex', justifyContent: 'space-between'}}
@@ -733,7 +734,7 @@ const PersonalSetting = () => {
                             </div>
                             <div style={{marginTop: 10}}>
                                 <Space>
-                                    <Button onClick={generateAccessToken}>
+                                    <Button onClick={generateAccessToken} style={{display: isPersionalGenerateAccessTokenShow ? 'block' : 'none'}}>
                                         {t('生成系统访问令牌')}
                                     </Button>
                                     <Button
@@ -786,7 +787,7 @@ const PersonalSetting = () => {
                                 </Modal>
                             </div>
                         </Card>
-                        <Card style={{marginTop: 10}}>
+                        <Card style={{marginTop: 10,display: isPersionalNotificationShow ? 'block' : 'none'}}>
                             <Typography.Title heading={6}>{t('通知设置')}</Typography.Title>
                             <div style={{marginTop: 20}}>
                                 <Typography.Text strong>{t('通知方式')}</Typography.Text>

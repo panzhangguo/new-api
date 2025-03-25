@@ -24,6 +24,7 @@ import {
 import { IconTreeTriangleDown } from '@douyinfe/semi-icons';
 import EditToken from '../pages/Token/EditToken';
 import { useTranslation } from 'react-i18next';
+import { isTokenPageGridChatActionShow } from '../expand/config';
 
 function renderTimestamp(timestamp) {
   return <>{timestamp2string(timestamp)}</>;
@@ -198,7 +199,7 @@ const TokensTable = () => {
               {t('复制')}
             </Button>
             <SplitButtonGroup
-              style={{ marginRight: 1 }}
+              style={{ marginRight: 1, display: isTokenPageGridChatActionShow ? 'block' : 'none' }}
               aria-label={t('项目操作按钮组')}
             >
               <Button
