@@ -1370,7 +1370,6 @@ const ChannelsTable = () => {
       </div>
       <div style={{ 
         marginTop: 20,
-        marginBottom: 20, // pfee 修改样式
         display: 'flex',
         flexDirection: isMobile() ? 'column' : 'row',
         alignItems: isMobile() ? 'flex-start' : 'center',
@@ -1427,6 +1426,7 @@ const ChannelsTable = () => {
       
       <div style={{ 
         marginTop: 20,
+        marginBottom: 20, // pfee 修改样式      
         display: 'flex',
         flexDirection: isMobile() ? 'column' : 'row',
         alignItems: isMobile() ? 'flex-start' : 'center',
