@@ -1,6 +1,12 @@
 // 隐藏暗黑切换按钮
 export const isThemeBtnShow = false
 
+// 国际化按钮
+export const isLanguageBtnShow = false
+
+// layoput footer
+export const isLayoutFooterShow = false
+
 // 系统设置通用设置
 export const isOperationGenerateShow = false
 

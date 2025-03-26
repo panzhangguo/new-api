@@ -26,6 +26,7 @@ import Playground from './pages/Playground/Playground.js';
 import OAuth2Callback from "./components/OAuth2Callback.js";
 import PersonalSetting from './components/PersonalSetting.js';
 import Tenant from './pages/Tenant/index.js';
+import Console from './pages/Console/index.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -45,86 +46,200 @@ function App() {
             </Suspense>
           }
         />
+        {/* pfee 添加控制器父路由 */}
         <Route
-          path='/channel'
+          path='/console'
           element={
-            <PrivateRoute>
-              <Channel />
-            </PrivateRoute>
+            <Console />
           }
-        />
-        <Route
-          path='/channel/edit/:id'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <EditChannel />
-            </Suspense>
-          }
-        />
-        <Route
-          path='/channel/add'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <EditChannel />
-            </Suspense>
-          }
-        />
-        <Route
-          path='/token'
-          element={
-            <PrivateRoute>
-              <Token />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/playground'
-          element={
-            <PrivateRoute>
-              <Playground />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/redemption'
-          element={
-            <PrivateRoute>
-              <Redemption />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/user'
-          element={
-            <PrivateRoute>
-              <User />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/user/edit/:id'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <EditUser />
-            </Suspense>
-          }
-        />
-        <Route
-          path='/user/edit'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <EditUser />
-            </Suspense>
-          }
-        />
-        <Route
-          path='/user/reset'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <PasswordResetConfirm />
-            </Suspense>
-          }
-        />
+        >
+          <Route
+            path='/console/channel'
+            element={
+              <PrivateRoute>
+                <Channel />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/channel/edit/:id'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <EditChannel />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/channel/add'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <EditChannel />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/token'
+            element={
+              <PrivateRoute>
+                <Token />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/playground'
+            element={
+              <PrivateRoute>
+                <Playground />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/redemption'
+            element={
+              <PrivateRoute>
+                <Redemption />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/user'
+            element={
+              <PrivateRoute>
+                <User />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/user/edit/:id'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <EditUser />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/user/edit'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <EditUser />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/user/reset'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <PasswordResetConfirm />
+              </Suspense>
+            }
+          />
+
+          <Route
+            path='/console/oauth/github'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <OAuth2Callback type='github'></OAuth2Callback>
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/oauth/oidc'
+            element={
+              <Suspense fallback={<Loading></Loading>}>
+                <OAuth2Callback type='oidc'></OAuth2Callback>
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/oauth/linuxdo'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <OAuth2Callback type='linuxdo'></OAuth2Callback>
+              </Suspense>
+            }
+          />
+          <Route
+            path='/console/setting'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <Setting />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/personal'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <PersonalSetting />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/topup'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <TopUp />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/log'
+            element={
+              <PrivateRoute>
+                <Log />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/detail'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <Detail />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/midjourney'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <Midjourney />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/console/task'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <Task />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          {/* pfee 添加组织管理路由 */}
+          <Route
+            path='/console/company'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <Tenant />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+        </Route>
+        {/* pfee 添加控制器父路由 */}
+
         <Route
           path='/login'
           element={
@@ -149,98 +264,7 @@ function App() {
             </Suspense>
           }
         />
-        <Route
-          path='/oauth/github'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <OAuth2Callback type='github'></OAuth2Callback>
-            </Suspense>
-          }
-        />
-        <Route
-          path='/oauth/oidc'
-          element={
-            <Suspense fallback={<Loading></Loading>}>
-              <OAuth2Callback type='oidc'></OAuth2Callback>
-            </Suspense>
-          }
-        />
-        <Route
-          path='/oauth/linuxdo'
-          element={
-            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-              <OAuth2Callback type='linuxdo'></OAuth2Callback>
-            </Suspense>
-          }
-        />
-        <Route
-          path='/setting'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Setting />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/personal'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <PersonalSetting />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/topup'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <TopUp />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/log'
-          element={
-            <PrivateRoute>
-              <Log />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/detail'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Detail />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/midjourney'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Midjourney />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path='/task'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Task />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
+
         <Route
           path='/pricing'
           element={
@@ -263,17 +287,6 @@ function App() {
             <Suspense fallback={<Loading></Loading>} key={location.pathname}>
               <Chat />
             </Suspense>
-          }
-        />
-        {/* pfee 添加组织管理路由 */}
-        <Route
-          path='/company'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Tenant />
-              </Suspense>
-            </PrivateRoute>
           }
         />
         {/* 方便使用chat2link直接跳转聊天... */}

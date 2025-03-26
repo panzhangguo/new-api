@@ -11,6 +11,7 @@ import { API, getLogo, getSystemName, showError } from '../helpers/index.js';
 import { setStatusData } from '../helpers/data.js';
 import { UserContext } from '../context/User/index.js';
 import { StatusContext } from '../context/Status/index.js';
+import { isLayoutFooterShow } from '../expand/config.js';
 const { Sider, Content, Header, Footer } = Layout;
 
 
@@ -96,8 +97,8 @@ const PageLayout = () => {
         display: 'flex',
         flexDirection: 'column'
       }}>
-        {/* pfee 未登录用户隐藏侧边栏 */}
-        {userState.user && styleState.showSider && (
+        {/* pfee layout层隐藏侧边栏 */}
+        {false && styleState.showSider && (
           <Sider style={{
             position: 'fixed',
             left: 0,
@@ -113,7 +114,7 @@ const PageLayout = () => {
           </Sider>
         )}
         <Layout style={{
-          marginLeft: styleState.isMobile ? '0' : (styleState.showSider && userState.user ? (styleState.siderCollapsed ? '60px' : '256px') : '0'), // pfee 宽度更改
+          marginLeft: 0, // pfee 宽度更改
           transition: 'margin-left 0.3s ease',
           flex: '1 1 auto',
           display: 'flex',
@@ -133,7 +134,7 @@ const PageLayout = () => {
           </Content>
           {/* pfee 隐藏footer */}
           {
-            false && <Layout.Footer style={{
+            isLayoutFooterShow && <Layout.Footer style={{
               flex: '0 0 auto',
               width: '100%'
             }}>

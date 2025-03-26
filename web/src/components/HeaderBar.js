@@ -29,7 +29,7 @@ import { stringToColor } from '../helpers/render';
 import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import { StyleContext } from '../context/Style/index.js';
 import { StatusContext } from '../context/Status/index.js';
-import { isThemeBtnShow } from '../expand/config.js';
+import { isLanguageBtnShow, isThemeBtnShow } from '../expand/config.js';
 
 // 自定义顶部栏样式
 const headerStyle = {
@@ -127,8 +127,8 @@ const HeaderBar = () => {
     },
     {
       text: t('控制台'),
-      itemKey: 'detail',
-      to: '/',
+      itemKey: 'console',
+      to: '/console/detail', // pfee 修改路径
       icon: <IconTerminal style={headerIconStyle} />,
     },
     {
@@ -230,7 +230,7 @@ const HeaderBar = () => {
                 login: '/login',
                 register: '/register',
                 pricing: '/pricing',
-                detail: '/detail',
+                console: '/console/detail', // pfee 修改控制台
                 home: '/',
                 chat: '/chat',
               };
@@ -367,7 +367,7 @@ const HeaderBar = () => {
                 }
                 {
                   // pfee 隐藏国际化
-                  false && (
+                  isLanguageBtnShow && (
                     <>
                       <Dropdown
                         position='bottomRight'

@@ -82,6 +82,14 @@ const routerMap = {
   personal: '/personal',
   company: '/company'
 };
+/* pfee 添加控制器前缀 */
+const inConsoleRoutes = ['channel', 'token', 'redemption', 'topup', 'user', 'log', 'midjourney', 'setting', 'detail', 'task', 'playground', 'personal']
+for (const route in routerMap) {
+  if (inConsoleRoutes.includes(route)) {
+    routerMap[route] = '/console' + routerMap[route];
+  }
+}
+/* pfee 添加控制器前缀 */
 
 const SiderBar = () => {
   const { t } = useTranslation();
