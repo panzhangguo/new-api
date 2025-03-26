@@ -22,7 +22,8 @@ import {
   IconLanguage,
   IconInfoCircle,
   IconCreditCard,
-  IconTerminal
+  IconTerminal,
+  IconSetting
 } from '@douyinfe/semi-icons';
 import { Avatar, Button, Dropdown, Layout, Nav, Switch, Tag } from '@douyinfe/semi-ui';
 import { stringToColor } from '../helpers/render';
@@ -153,6 +154,12 @@ const HeaderBar = () => {
     //   to: '/about',
     //   icon: <IconInfoCircle style={headerIconStyle} />,
     // },
+    {
+      text: t('系统管理'),
+      itemKey: 'system-admin',
+      to: '/system-admin/user',
+      icon: <IconSetting style={headerIconStyle} />,
+    }
   ];
 
   async function logout() {
@@ -233,6 +240,7 @@ const HeaderBar = () => {
                 console: '/console/detail', // pfee 修改控制台
                 home: '/',
                 chat: '/chat',
+                'system-admin': '/system-admin/user', // pfee 添加系统管理
               };
               return (
                 <div onClick={(e) => {

@@ -27,6 +27,7 @@ import OAuth2Callback from "./components/OAuth2Callback.js";
 import PersonalSetting from './components/PersonalSetting.js';
 import Tenant from './pages/Tenant/index.js';
 import Console from './pages/Console/index.js';
+import SystemAdmin from './pages/SystemAdmin/index.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -101,39 +102,6 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path='/console/user'
-            element={
-              <PrivateRoute>
-                <User />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path='/console/user/edit/:id'
-            element={
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <EditUser />
-              </Suspense>
-            }
-          />
-          <Route
-            path='/console/user/edit'
-            element={
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <EditUser />
-              </Suspense>
-            }
-          />
-          <Route
-            path='/console/user/reset'
-            element={
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <PasswordResetConfirm />
-              </Suspense>
-            }
-          />
-
           <Route
             path='/console/oauth/github'
             element={
@@ -226,17 +194,6 @@ function App() {
               </PrivateRoute>
             }
           />
-          {/* pfee 添加组织管理路由 */}
-          <Route
-            path='/console/company'
-            element={
-              <PrivateRoute>
-                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <Tenant />
-                </Suspense>
-              </PrivateRoute>
-            }
-          />
         </Route>
         {/* pfee 添加控制器父路由 */}
 
@@ -300,6 +257,53 @@ function App() {
             </PrivateRoute>
           }
         />
+        {/* pfee 添加系统管理 */}
+        <Route path='/system-admin' element={<SystemAdmin />} >
+          {/* 原用户管理迁移至系统管理 */}
+          <Route
+            path='/system-admin/user'
+            element={
+              <PrivateRoute>
+                <User />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/system-admin/user/edit/:id'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <EditUser />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/system-admin/user/edit'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <EditUser />
+              </Suspense>
+            }
+          />
+          <Route
+            path='/system-admin/user/reset'
+            element={
+              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                <PasswordResetConfirm />
+              </Suspense>
+            }
+          />
+          {/* pfee 添加组织管理路由 */}
+          <Route
+            path='/system-admin/company'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <Tenant />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+        </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
     </>

@@ -80,10 +80,10 @@ const routerMap = {
   task: '/task',
   playground: '/playground',
   personal: '/personal',
-  company: '/company'
 };
+
 /* pfee 添加控制器前缀 */
-const inConsoleRoutes = ['channel', 'token', 'redemption', 'topup', 'user', 'log', 'midjourney', 'setting', 'detail', 'task', 'playground', 'personal', 'company']
+const inConsoleRoutes = ['channel', 'token', 'redemption', 'topup', 'user', 'log', 'midjourney', 'setting', 'detail', 'task', 'playground', 'personal']
 for (const route in routerMap) {
   if (inConsoleRoutes.includes(route)) {
     routerMap[route] = '/console' + routerMap[route];
@@ -214,18 +214,13 @@ const SiderBar = () => {
         icon: <IconGift />,
         className: isAdmin() ? '' : 'tableHiddle',
       },
-      {
-        text: t('用户管理'),
-        itemKey: 'user',
-        to: '/user',
-        icon: <IconUser />,
-      },
-      {
-        text: t('组织管理'),
-        itemKey: 'company',
-        to: '/company',
-        icon: <IconUserGroup />,
-      },
+      // pfee 迁移至系统管理
+      // {
+      //   text: t('用户管理'),
+      //   itemKey: 'user',
+      //   to: '/user',
+      //   icon: <IconUser />,
+      // },
       {
         text: t('系统设置'),
         itemKey: 'setting',
