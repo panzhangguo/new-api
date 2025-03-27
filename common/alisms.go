@@ -41,16 +41,14 @@ func SendDySmsCode(phone string, code string) (_err error) {
 		return _err
 	}
 
-	templateCode := tea.String(os.Getenv("ALIBABA_DYSMS_TEMPLATECODE"))
-	signName := tea.String(os.Getenv("ALIBABA_DYSMS_SIGNNAME"))
-	fmt.Println(templateCode)
-	fmt.Println(signName)
+	templateCode := os.Getenv("ALIBABA_DYSMS_TEMPLATECODE")
+	signName := os.Getenv("ALIBABA_DYSMS_SIGNNAME")
 
 	sendSmsRequest := &dysmsapi20170525.SendSmsRequest{
 		PhoneNumbers:  tea.String(phone),
-		SignName:      signName,
-		TemplateCode:  templateCode,
-		TemplateParam: tea.String("{\"code\":" + code + "}"),
+		SignName:      tea.String(signName),
+		TemplateCode:  tea.String(templateCode),
+		TemplateParam: tea.String("{\"code\":\"" + code + "\"}"),
 	}
 	runtime := &util.RuntimeOptions{}
 	tryErr := func() (_e error) {
@@ -77,7 +75,7 @@ func SendDySmsCode(phone string, code string) (_err error) {
 		}
 		// 此处仅做打印展示，请谨慎对待异常处理，在工程项目中切勿直接忽略异常。
 		// 错误 message
-		fmt.Println(tea.StringValue(error.Message))
+		fmt.Println("error message" + tea.StringValue(error.Message))
 		// 诊断地址
 		var data interface{}
 		d := json.NewDecoder(strings.NewReader(tea.StringValue(error.Data)))
@@ -87,9 +85,12 @@ func SendDySmsCode(phone string, code string) (_err error) {
 			fmt.Println(recommend)
 		}
 		_, _err = util.AssertAsString(error.Message)
+
 		if _err != nil {
 			return _err
 		}
+
+		return error
 	}
 	return _err
 }

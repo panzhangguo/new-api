@@ -50,7 +50,6 @@ func SendSmsCode(c *gin.Context) {
 	}
 
 	if sendedSmsCode != "" {
-		log.Printf("hasSend hasSend: %v", sendedSmsCode)
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "请勿重复发送验证码，或稍后重试",
@@ -61,17 +60,17 @@ func SendSmsCode(c *gin.Context) {
 	smsCode := GenerateSmsCode(6)
 
 	dyerr := common.SendDySmsCode(phone, smsCode)
+
 	if dyerr != nil {
-		// panic(dyerr)
-		log.Printf("Failed to send SMS code: %v", dyerr)
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "短信验证码发送失败，请稍后重试",
+			"data":    dyerr,
 		})
 		return
 	}
 	// 60s内有效
-	common.RedisSet(phone, smsCode, time.Second*60)
+	common.RedisSet(phone, smsCode, time.Second*5)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "已生成验证码",
