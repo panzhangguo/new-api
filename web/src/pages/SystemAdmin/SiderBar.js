@@ -43,7 +43,7 @@ const iconStyle = (itemKey, selectedKeys) => {
 // Define routerMap as a constant outside the component
 const routerMap = {
   user: '/system-admin/user',
-  company: '/system-admin/company'
+  teammanage: '/system-admin/teammanage'
 };
 
 const SiderBar = () => {
@@ -61,7 +61,7 @@ const SiderBar = () => {
 
   // 预先计算所有可能的图标样式
   const allItemKeys = useMemo(() => {
-    const keys = ['company', 'user'];
+    const keys = ['teammanage', 'user'];
     // 添加聊天项的keys
     for (let i = 0; i < chatItems.length; i++) {
       keys.push('chat' + i);
@@ -87,9 +87,9 @@ const SiderBar = () => {
         icon: <IconUser />,
       },
       {
-        text: t('组织管理'),
-        itemKey: 'company',
-        to: '/system-admin/company',
+        text: t('团队管理'),
+        itemKey: 'teammanage',
+        to: '/system-admin/teammanage',
         icon: <IconUserGroup />,
       }
     ],
@@ -103,16 +103,14 @@ const SiderBar = () => {
   return (
     <>
       <Nav
-        className="custom-sidebar-nav"
         style={{
-          width: isCollapsed ? '60px' : '256px',
-          boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-          borderRight: '1px solid var(--semi-color-border)',
+          flexShrink: 0,
           background: 'var(--semi-color-bg-1)',
-          borderRadius: styleState.isMobile ? '0' : '0 8px 8px 0',
+          borderRadius: styleState.isMobile ? '0' : '12px',
           position: 'relative',
           zIndex: 95,
           height: '100%',
+          width: isCollapsed ? '60px' : '256px',
           overflowY: 'auto',
           WebkitOverflowScrolling: 'touch', // Improve scrolling on iOS devices
         }}
@@ -184,20 +182,6 @@ const SiderBar = () => {
             ))}
           </>
         )}
-
-        <Nav.Footer
-          style={{
-            paddingBottom: styleState?.isMobile ? '112px' : '',
-          }}
-          collapseButton={true}
-          collapseText={(collapsed) => {
-            if (collapsed) {
-              return t('展开侧边栏')
-            }
-            return t('收起侧边栏')
-          }
-          }
-        />
       </Nav>
     </>
   );

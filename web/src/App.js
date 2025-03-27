@@ -25,7 +25,7 @@ import Task from "./pages/Task/index.js";
 import Playground from './pages/Playground/Playground.js';
 import OAuth2Callback from "./components/OAuth2Callback.js";
 import PersonalSetting from './components/PersonalSetting.js';
-import Tenant from './pages/Tenant/index.js';
+import TeamManage from './pages/TeamManage/index.js';
 import Console from './pages/Console/index.js';
 import SystemAdmin from './pages/SystemAdmin/index.js';
 
@@ -292,13 +292,13 @@ function App() {
               </Suspense>
             }
           />
-          {/* pfee 添加组织管理路由 */}
+          {/* pfee 添加团队管理路由 */}
           <Route
-            path='/system-admin/company'
+            path='/system-admin/teammanage'
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <Tenant />
+                  <TeamManage />
                 </Suspense>
               </PrivateRoute>
             }

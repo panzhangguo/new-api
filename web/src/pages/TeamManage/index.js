@@ -1,7 +1,7 @@
 // 添加组织管理/租户
 import React, { useEffect, useState, useRef } from 'react';
 import { API, showError, showSuccess } from '../../helpers';
-const Tenant = () => {
+const TeamManage = () => {
   const flag = useRef(true);
   const loadUsers = async (startIdx, pageSize) => {
     const res = await API.get(`/api/tenant/?p=${startIdx}&page_size=${pageSize}`);
@@ -23,10 +23,10 @@ const Tenant = () => {
   }, []);
   return (
     <>
-      <div style={{ backgroundColor: "red" }}>company</div>
+      <div style={{ backgroundColor: "red" }}>teammanage</div>
     </>
   )
 }
 
 
-export default Tenant;
+export default TeamManage;

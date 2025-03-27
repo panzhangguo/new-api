@@ -10,29 +10,26 @@ const SystemAdmin = () => {
     const [styleState, styleDispatch] = useContext(StyleContext);
 
     return (
-        <Layout>
-            <Layout.Sider>
-                <Sider style={{
-                    position: 'fixed',
-                    left: 0,
-                    top: '56px',
-                    zIndex: 99,
-                    background: 'var(--semi-color-bg-1)',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-                    border: 'none',
-                    paddingRight: '0',
-                    height: 'calc(100vh - 56px)',
-                }}>
-                    <SiderBar></SiderBar>
-                </Sider>
+        <Layout style={{ height: '100%' }}>
+            <Layout.Sider style={{
+                border: 'none',
+                paddingRight: '0',
+                height: '100%',
+                width: '256px',
+            }}>
+                <SiderBar></SiderBar>
             </Layout.Sider>
             <Layout.Content
                 style={{
-                    marginLeft: styleState.isMobile ? '0' : (styleState.showSider ? (styleState.siderCollapsed ? '60px' : '256px') : '0'),
+                    overflow: 'auto',
+                    marginLeft: '10px',
+                    backgroundColor: 'var(--semi-color-bg-1)',
                     transition: 'margin-left 0.3s ease',
                     flex: '1 1 auto',
                     display: 'flex',
-                    flexDirection: 'column'
+                    flexDirection: 'column',
+                    padding: '10px',
+                    borderRadius: "8px"
                 }}
             >
                 <Outlet></Outlet>
