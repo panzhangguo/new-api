@@ -99,6 +99,10 @@ func ValidateSmsCode(phone string, code string) int {
 	return 2
 }
 
-// func Register(c *gin.Context) {
-
-// }
+// 客户端注册
+func StudioRegister(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "用户注册,欢迎使用！",
+		"success": true,
+	})
+}

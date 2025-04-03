@@ -8,7 +8,8 @@ import {
 
 import {
   IconUser,
-  IconUserGroup
+  IconUserGroup,
+  IconSemiLogo
 } from '@douyinfe/semi-icons';
 import { Avatar, Dropdown, Layout, Nav, Switch, Divider } from '@douyinfe/semi-ui';
 import { StyleContext } from '../../context/Style/index.js';
@@ -49,11 +50,8 @@ const routerMap = {
 const SiderBar = () => {
   const { t } = useTranslation();
   const [styleState, styleDispatch] = useContext(StyleContext);
-  const defaultIsCollapsed =
-    localStorage.getItem('default_collapse_sidebar') === 'true';
 
-  const [selectedKeys, setSelectedKeys] = useState(['user']);
-  const [isCollapsed, setIsCollapsed] = useState(defaultIsCollapsed);
+  const [selectedKeys, setSelectedKeys] = useState(['teammanage']);
   const [chatItems, setChatItems] = useState([]);
   const [openedKeys, setOpenedKeys] = useState([]);
   const location = useLocation();
@@ -96,45 +94,22 @@ const SiderBar = () => {
     [isAdmin(), t],
   );
 
-  useEffect(() => {
-    setIsCollapsed(styleState.siderCollapsed);
-  }, [styleState.siderCollapsed]);
-
   return (
     <>
       <Nav
         style={{
           flexShrink: 0,
-          background: 'var(--semi-color-bg-1)',
           borderRadius: styleState.isMobile ? '0' : '12px',
           position: 'relative',
           zIndex: 95,
           height: '100%',
-          width: isCollapsed ? '60px' : '256px',
+          width: '256px',
           overflowY: 'auto',
           WebkitOverflowScrolling: 'touch', // Improve scrolling on iOS devices
         }}
-        defaultIsCollapsed={
-          localStorage.getItem('default_collapse_sidebar') === 'true'
-        }
-        isCollapsed={isCollapsed}
-        onCollapseChange={(collapsed) => {
-          setIsCollapsed(collapsed);
-          // styleDispatch({ type: 'SET_SIDER', payload: true });
-          styleDispatch({ type: 'SET_SIDER_COLLAPSED', payload: collapsed });
-          localStorage.setItem('default_collapse_sidebar', collapsed);
-
-          // 确保在收起侧边栏时有选中的项目，避免不必要的计算
-          if (selectedKeys.length === 0) {
-            const currentPath = location.pathname;
-            const matchingKey = Object.keys(routerMapState).find(key => routerMapState[key] === currentPath);
-
-            if (matchingKey) {
-              setSelectedKeys([matchingKey]);
-            } {
-              setSelectedKeys(['user']); // 默认选中首页
-            }
-          }
+        header={{
+          logo: <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />,
+          text: '运营后台'
         }}
         selectedKeys={selectedKeys}
         itemStyle={navItemStyle}

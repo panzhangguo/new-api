@@ -15,6 +15,7 @@ import {
   Typography,
 } from '@douyinfe/semi-ui';
 import { useTranslation } from 'react-i18next';
+import { isEditUserPageBindAccountShow } from '../../expand/config';
 
 const EditUser = (props) => {
   const userId = props.editingUser.id;
@@ -223,56 +224,60 @@ const EditUser = (props) => {
               </Space>
             </>
           )}
-          <Divider style={{ marginTop: 20 }}>{t('以下信息不可修改')}</Divider>
-          <div style={{ marginTop: 20 }}>
-            <Typography.Text>{t('已绑定的 GitHub 账户')}</Typography.Text>
-          </div>
-          <Input
-            name='github_id'
-            value={github_id}
-            autoComplete='new-password'
-            placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
-            readonly
-          />
-          <div style={{ marginTop: 20 }}>
-            <Typography.Text>{t('`已绑定的 OIDC 账户')}</Typography.Text>
-          </div>
-          <Input
+          <div style={{ display: isEditUserPageBindAccountShow ? 'block' : 'none' }}>
+            <Divider style={{ marginTop: 20 }}>{t('以下信息不可修改')}</Divider>
+            <div style={{ marginTop: 20 }}>
+              <Typography.Text>{t('已绑定的 GitHub 账户')}</Typography.Text>
+            </div>
+            <Input
+              name='github_id'
+              value={github_id}
+              autoComplete='new-password'
+              placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
+              readonly
+            />
+            <div style={{ marginTop: 20 }}>
+              <Typography.Text>{t('`已绑定的 OIDC 账户')}</Typography.Text>
+            </div>
+            <Input
               name='oidc_id'
               value={oidc_id}
               placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
               readonly
-          />
-          <div style={{ marginTop: 20 }}>
-            <Typography.Text>{t('已绑定的微信账户')}</Typography.Text>
+            />
+            <div style={{ marginTop: 20 }}>
+              <Typography.Text>{t('已绑定的微信账户')}</Typography.Text>
+            </div>
+            <Input
+              name='wechat_id'
+              value={wechat_id}
+              autoComplete='new-password'
+              placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
+              readonly
+            />
+            <div style={{ marginTop: 20 }}>
+              <Typography.Text>{t('已绑定的邮箱账户')}</Typography.Text>
+            </div>
+            <Input
+              name='email'
+              value={email}
+              autoComplete='new-password'
+              placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
+              readonly
+            />
+            <div style={{ marginTop: 20 }}>
+              <Typography.Text>{t('已绑定的Telegram账户')}</Typography.Text>
+            </div>
+            <Input
+              name='telegram_id'
+              value={telegram_id}
+              autoComplete='new-password'
+              placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
+              readonly
+            />
           </div>
-          <Input
-            name='wechat_id'
-            value={wechat_id}
-            autoComplete='new-password'
-            placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
-            readonly
-          />
-          <div style={{ marginTop: 20 }}>
-            <Typography.Text>{t('已绑定的邮箱账户')}</Typography.Text>
-          </div>
-          <Input
-            name='email'
-            value={email}
-            autoComplete='new-password'
-            placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
-            readonly
-          />
-          <div style={{ marginTop: 20 }}>
-            <Typography.Text>{t('已绑定的Telegram账户')}</Typography.Text>
-          </div>
-          <Input
-            name='telegram_id'
-            value={telegram_id}
-            autoComplete='new-password'
-            placeholder={t('此项只读，需要用户通过个人设置页面的相关绑定按钮进行绑定，不可直接修改')}
-            readonly
-          />
+
+
         </Spin>
       </SideSheet>
       <Modal

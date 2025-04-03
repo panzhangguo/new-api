@@ -54,3 +54,6 @@ export const isOtherSettingShow = false
 
 // token page grid 隐藏聊天action
 export const isTokenPageGridChatActionShow = false
+
+// 编辑用户页 隐藏绑定账户
+export const isEditUserPageBindAccountShow = false
