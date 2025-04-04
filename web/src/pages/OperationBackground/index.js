@@ -6,7 +6,7 @@ const { Sider } = Layout;
 import React, { useContext, useEffect } from 'react';
 import SiderBar from "./SiderBar.js";
 
-const SystemAdmin = () => {
+const OperationBackground = () => {
     const [styleState, styleDispatch] = useContext(StyleContext);
 
     return (
@@ -38,4 +38,4 @@ const SystemAdmin = () => {
     )
 }
 
-export default SystemAdmin
+export default OperationBackground

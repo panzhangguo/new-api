@@ -27,7 +27,9 @@ import OAuth2Callback from "./components/OAuth2Callback.js";
 import PersonalSetting from './components/PersonalSetting.js';
 import TeamManage from './pages/TeamManage/index.js';
 import Console from './pages/Console/index.js';
-import SystemAdmin from './pages/SystemAdmin/index.js';
+import OperationBackground from './pages/OperationBackground/index.js';
+import Account from './pages/Account/index.js';
+import MyTeam from './pages/MyTeam/index.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -147,16 +149,6 @@ function App() {
             }
           />
           <Route
-            path='/console/topup'
-            element={
-              <PrivateRoute>
-                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <TopUp />
-                </Suspense>
-              </PrivateRoute>
-            }
-          />
-          <Route
             path='/console/log'
             element={
               <PrivateRoute>
@@ -196,7 +188,6 @@ function App() {
           />
         </Route>
         {/* pfee 添加控制器父路由 */}
-
         <Route
           path='/login'
           element={
@@ -258,10 +249,10 @@ function App() {
           }
         />
         {/* pfee 添加系统管理 */}
-        <Route path='/system-admin' element={<SystemAdmin />} >
+        <Route path='/operation-background' element={<OperationBackground />} >
           {/* 原用户管理迁移至系统管理 */}
           <Route
-            path='/system-admin/user'
+            path='/operation-background/user'
             element={
               <PrivateRoute>
                 <User />
@@ -269,7 +260,7 @@ function App() {
             }
           />
           <Route
-            path='/system-admin/user/edit/:id'
+            path='/operation-background/user/edit/:id'
             element={
               <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                 <EditUser />
@@ -277,7 +268,7 @@ function App() {
             }
           />
           <Route
-            path='/system-admin/user/edit'
+            path='/operation-background/user/edit'
             element={
               <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                 <EditUser />
@@ -285,7 +276,7 @@ function App() {
             }
           />
           <Route
-            path='/system-admin/user/reset'
+            path='/operation-background/user/reset'
             element={
               <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                 <PasswordResetConfirm />
@@ -294,11 +285,44 @@ function App() {
           />
           {/* pfee 添加团队管理路由 */}
           <Route
-            path='/system-admin/teammanage'
+            path='/operation-background/teammanage'
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                   <TeamManage />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+        </Route>
+        {/* pfee 添加账号管理路由 个人信息由控制台迁移到个账号人中心 */}
+        <Route path='/account' element={<Account />} >
+          <Route
+            path='/account/personal'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <PersonalSetting />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/account/topup'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <TopUp />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/account/my-team'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <MyTeam />
                 </Suspense>
               </PrivateRoute>
             }

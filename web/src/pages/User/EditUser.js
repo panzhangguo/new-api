@@ -25,6 +25,7 @@ const EditUser = (props) => {
   const [inputs, setInputs] = useState({
     username: '',
     display_name: '',
+    mobile_phone: '', // pfee 手机号码
     password: '',
     github_id: '',
     oidc_id: '',
@@ -37,6 +38,7 @@ const EditUser = (props) => {
   const {
     username,
     display_name,
+    mobile_phone,
     password,
     github_id,
     oidc_id,
@@ -188,6 +190,17 @@ const EditUser = (props) => {
             placeholder={t('请输入新的显示名称')}
             onChange={(value) => handleInputChange('display_name', value)}
             value={display_name}
+            autoComplete='new-password'
+          />
+          <div style={{ marginTop: 20 }}>
+            <Typography.Text>{t('手机号')}</Typography.Text>
+          </div>
+          <Input
+            label={t('手机')}
+            name='mobile_phone'
+            placeholder={t('请输入新的手机号码')}
+            onChange={(value) => handleInputChange('mobile_phone', value)}
+            value={mobile_phone}
             autoComplete='new-password'
           />
           {userId && (

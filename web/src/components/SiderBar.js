@@ -477,7 +477,7 @@ const SiderBar = () => {
         <Divider style={dividerStyle} />
 
         {/* Finance Management Section */}
-        {!isCollapsed && <Text style={groupLabelStyle}>{t('个人中心')}</Text>}
+        {/* {!isCollapsed && <Text style={groupLabelStyle}>{t('个人中心')}</Text>}
         {financeItems.map((item) => (
           <Nav.Item
             key={item.itemKey}
@@ -486,7 +486,7 @@ const SiderBar = () => {
             icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
             className={item.className}
           />
-        ))}
+        ))} */}
 
         <Nav.Footer
           style={{

@@ -34,27 +34,6 @@ func SetApiRouter(router *gin.Engine) {
 		apiRouter.GET("/oauth/telegram/login", middleware.CriticalRateLimit(), controller.TelegramLogin)
 		apiRouter.GET("/oauth/telegram/bind", middleware.CriticalRateLimit(), controller.TelegramBind)
 
-		// pfee 添加租户接口入口
-		tenantRoute := apiRouter.Group("/tenant")
-		tenantRoute.Use(middleware.AdminAuth())
-		{
-			tenantRoute.POST("", controller.CreateUser)
-			tenantRoute.GET("/:id", controller.GetUser)
-			tenantRoute.PUT("/:id", controller.UpdateUser)
-			tenantRoute.DELETE("/:id", controller.DeleteUser)
-			tenantRoute.GET("", controller.GetAllUsers)
-		}
-		// pfee 添加租户接口入口
-		winloadSmsRoute := apiRouter.Group("/winload-sms")
-		winloadSmsRoute.Use()
-		{
-			winloadSmsRoute.POST("", controller.CreateUser)
-			winloadSmsRoute.GET("/:id", controller.GetUser)
-			winloadSmsRoute.PUT("/:id", controller.UpdateUser)
-			winloadSmsRoute.DELETE("/:id", controller.DeleteUser)
-			winloadSmsRoute.GET("", controller.SendSmsCode)
-		}
-
 		userRoute := apiRouter.Group("/user")
 		{
 			userRoute.POST("/register", middleware.CriticalRateLimit(), middleware.TurnstileCheck(), controller.Register)
@@ -176,6 +155,33 @@ func SetApiRouter(router *gin.Engine) {
 		{
 			taskRoute.GET("/self", middleware.UserAuth(), controller.GetUserTask)
 			taskRoute.GET("/", middleware.AdminAuth(), controller.GetAllTask)
+		}
+
+		// pfee 添加租户接口入口
+		tenantRoute := apiRouter.Group("/tenant")
+		tenantRoute.Use(middleware.AdminAuth())
+		{
+			tenantRoute.POST("", controller.CreateUser)
+			tenantRoute.GET("/:id", controller.GetUser)
+			tenantRoute.PUT("/:id", controller.UpdateUser)
+			tenantRoute.DELETE("/:id", controller.DeleteUser)
+			tenantRoute.GET("", controller.GetAllUsers)
+		}
+		// pfee 添加租户接口入口
+		winloadSmsRoute := apiRouter.Group("/winload-sms")
+		winloadSmsRoute.Use()
+		{
+			winloadSmsRoute.POST("", controller.CreateUser)
+			winloadSmsRoute.GET("/:id", controller.GetUser)
+			winloadSmsRoute.PUT("/:id", controller.UpdateUser)
+			winloadSmsRoute.DELETE("/:id", controller.DeleteUser)
+			winloadSmsRoute.GET("", controller.SendSmsCode)
+		}
+
+		winloadTeamRoute := apiRouter.Group("/winload-team")
+		winloadTeamRoute.Use(middleware.UserAuth())
+		{
+			winloadTeamRoute.POST("", controller.CreateTeam)
 		}
 	}
 }

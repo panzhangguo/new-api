@@ -4,7 +4,7 @@ import { UserContext } from '../context/User';
 import { useSetTheme, useTheme } from '../context/Theme';
 import { useTranslation } from 'react-i18next';
 
-import { API, getLogo, getSystemName, isMobile, showSuccess } from '../helpers';
+import { API, getLogo, getSystemName, isAdmin, isMobile, showSuccess } from '../helpers';
 import '../index.css';
 
 import fireworks from 'react-fireworks';
@@ -31,6 +31,7 @@ import Text from '@douyinfe/semi-ui/lib/es/typography/text';
 import { StyleContext } from '../context/Style/index.js';
 import { StatusContext } from '../context/Status/index.js';
 import { isLanguageBtnShow, isThemeBtnShow } from '../expand/config.js';
+import a from '@douyinfe/semi-ui/lib/es/markdownRender/components/a.js';
 
 // 自定义顶部栏样式
 const headerStyle = {
@@ -155,11 +156,19 @@ const HeaderBar = () => {
     //   icon: <IconInfoCircle style={headerIconStyle} />,
     // },
     {
-      text: t('系统管理'),
-      itemKey: 'system-admin',
-      to: '/system-admin/user',
-      icon: <IconSetting style={headerIconStyle} />,
-    }
+      text: t('账号'),
+      itemKey: 'account',
+      to: '/account/personal',
+      icon: <IconComment style={headerIconStyle} />,
+    },
+    ...isAdmin() ? [
+      {
+        text: t('运营后台'),
+        itemKey: 'operation_background',
+        to: '/operation-background/user',
+        icon: <IconSetting style={headerIconStyle} />,
+      }
+    ] : []
   ];
 
   async function logout() {
@@ -240,7 +249,8 @@ const HeaderBar = () => {
                 console: '/console/detail', // pfee 修改控制台
                 home: '/',
                 chat: '/chat',
-                'system-admin': '/system-admin/user', // pfee 添加系统管理
+                operation_background: '/operation-background/user', // pfee 添加系统管理
+                account: '/account/personal', // pfee 添加账号
               };
               return (
                 <div onClick={(e) => {

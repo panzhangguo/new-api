@@ -1,18 +1,29 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-
+import {
+  IconCalendarClock, IconChecklistStroked,
+  IconComment, IconCommentStroked,
+  IconCreditCard,
+  IconGift, IconHelpCircle,
+  IconHistogram,
+  IconHome,
+  IconImage,
+  IconKey,
+  IconLayers,
+  IconPriceTag,
+  IconSetting,
+  IconUser,
+  IconUserGroup
+} from '@douyinfe/semi-icons';
 import {
   isAdmin,
-} from '../../helpers';
+} from '../../helpers/index.js';
 
-import {
-  IconUser,
-  IconUserGroup,
-  IconSemiLogo
-} from '@douyinfe/semi-icons';
-import { Avatar, Dropdown, Layout, Nav, Switch, Divider } from '@douyinfe/semi-ui';
+import { Avatar, Dropdown, Layout, Nav, Switch, Divider, Typography } from '@douyinfe/semi-ui';
 import { StyleContext } from '../../context/Style/index.js';
+
+const { Text } = Typography
 
 // 自定义侧边栏按钮样式
 const navItemStyle = {
@@ -41,58 +52,73 @@ const iconStyle = (itemKey, selectedKeys) => {
   };
 };
 
-// Define routerMap as a constant outside the component
-const routerMap = {
-  user: '/system-admin/user',
-  teammanage: '/system-admin/teammanage'
+// Custom group label style
+const groupLabelStyle = {
+  padding: '8px 16px',
+  margin: '8px 0',
+  display: 'block',
+  color: 'var(--semi-color-text-2)',
+  fontSize: '14px',
+  fontWeight: 'bold',
+  textTransform: 'uppercase',
+  letterSpacing: '0.5px',
 };
 
-const SiderBar = () => {
+// Define routerMap as a constant outside the component
+const routerMap = {
+  topup: '/account/topup',
+  personal: '/account/personal',
+  "my-team": '/account/my-team'
+};
+
+const AccountSiderBar = () => {
   const { t } = useTranslation();
   const [styleState, styleDispatch] = useContext(StyleContext);
 
-  const [selectedKeys, setSelectedKeys] = useState(['teammanage']);
-  const [chatItems, setChatItems] = useState([]);
   const [openedKeys, setOpenedKeys] = useState([]);
   const location = useLocation();
+  const currentPath = location.pathname.split('/')[2];
+  const [selectedKeys, setSelectedKeys] = useState([currentPath]);
   const [routerMapState, setRouterMapState] = useState(routerMap);
 
-  // 预先计算所有可能的图标样式
-  const allItemKeys = useMemo(() => {
-    const keys = ['teammanage', 'user'];
-    // 添加聊天项的keys
-    for (let i = 0; i < chatItems.length; i++) {
-      keys.push('chat' + i);
-    }
-    return keys;
-  }, [chatItems]);
+  const financeItems = useMemo(
+    () => [
+      {
+        text: t('钱包'),
+        itemKey: 'topup',
+        to: '/account/topup',
+        icon: <IconCreditCard />,
+      },
+      {
+        text: t('个人设置'),
+        itemKey: 'personal',
+        to: '/account/personal',
+        icon: <IconUser />,
+      },
+    ],
+    [t],
+  );
+
+  const teamItems = useMemo(
+    () => [
+      {
+        text: t('我的团队'),
+        itemKey: 'my-team',
+        to: '/account/my-team',
+        icon: <IconUserGroup />,
+      },
+    ],
+    [t],
+  );
 
   // 使用useMemo一次性计算所有图标样式
   const iconStyles = useMemo(() => {
     const styles = {};
-    allItemKeys.forEach(key => {
+    ['personal', 'topup', 'my-team'].forEach(key => {
       styles[key] = iconStyle(key, selectedKeys);
     });
     return styles;
-  }, [allItemKeys, selectedKeys]);
-
-  const adminItems = useMemo(
-    () => [
-      {
-        text: t('用户管理'),
-        itemKey: 'user',
-        to: '/system-admin/user',
-        icon: <IconUser />,
-      },
-      {
-        text: t('团队管理'),
-        itemKey: 'teammanage',
-        to: '/system-admin/teammanage',
-        icon: <IconUserGroup />,
-      }
-    ],
-    [isAdmin(), t],
-  );
+  }, [selectedKeys]);
 
   return (
     <>
@@ -106,10 +132,6 @@ const SiderBar = () => {
           width: '256px',
           overflowY: 'auto',
           WebkitOverflowScrolling: 'touch', // Improve scrolling on iOS devices
-        }}
-        header={{
-          logo: <IconSemiLogo style={{ height: '36px', fontSize: 36 }} />,
-          text: '运营后台'
         }}
         selectedKeys={selectedKeys}
         itemStyle={navItemStyle}
@@ -126,17 +148,10 @@ const SiderBar = () => {
           );
         }}
         onSelect={(key) => {
-          if (key.itemKey.toString().startsWith('chat')) {
-            styleDispatch({ type: 'SET_INNER_PADDING', payload: false });
-          } else {
-            styleDispatch({ type: 'SET_INNER_PADDING', payload: true });
-          }
-
-          // 如果点击的是已经展开的子菜单的父项，则收起子菜单
+          styleDispatch({ type: 'SET_INNER_PADDING', payload: true });
           if (openedKeys.includes(key.itemKey)) {
             setOpenedKeys(openedKeys.filter(k => k !== key.itemKey));
           }
-
           setSelectedKeys([key.itemKey]);
         }}
         openKeys={openedKeys}
@@ -144,22 +159,30 @@ const SiderBar = () => {
           setOpenedKeys(data.openKeys);
         }}
       >
-        {isAdmin() && (
-          <>
-            {adminItems.map((item) => (
-              <Nav.Item
-                key={item.itemKey}
-                itemKey={item.itemKey}
-                text={item.text}
-                icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
-                className={item.className}
-              />
-            ))}
-          </>
-        )}
+        <Text style={groupLabelStyle}>{t('个人中心')}</Text>
+        {financeItems.map((item) => (
+          <Nav.Item
+            key={item.itemKey}
+            itemKey={item.itemKey}
+            text={item.text}
+            icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+            className={item.className}
+          />
+        ))}
+
+        <Text style={groupLabelStyle}>{t('团队管理')}</Text>
+        {teamItems.map((item) => (
+          <Nav.Item
+            key={item.itemKey}
+            itemKey={item.itemKey}
+            text={item.text}
+            icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+            className={item.className}
+          />
+        ))}
       </Nav>
     </>
   );
 };
 
-export default SiderBar;
+export default AccountSiderBar;

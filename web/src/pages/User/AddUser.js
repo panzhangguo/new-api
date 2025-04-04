@@ -8,10 +8,11 @@ const AddUser = (props) => {
     username: '',
     display_name: '',
     password: '',
+    mobile_phone: ''
   };
   const [inputs, setInputs] = useState(originInputs);
   const [loading, setLoading] = useState(false);
-  const { username, display_name, password } = inputs;
+  const { username, display_name, password, mobile_phone } = inputs;
 
   const handleInputChange = (name, value) => {
     setInputs((inputs) => ({ ...inputs, [name]: value }));
@@ -90,6 +91,17 @@ const AddUser = (props) => {
             placeholder={'请输入显示名称'}
             onChange={(value) => handleInputChange('display_name', value)}
             value={display_name}
+          />
+          <Input
+            style={{ marginTop: 20 }}
+            label='手 机'
+            name='mobile_phone'
+            type={'mobile_phone'}
+            addonBefore={'手机'}
+            placeholder={'请输入手机号码'}
+            onChange={(value) => handleInputChange('mobile_phone', value)}
+            value={mobile_phone}
+            autoComplete='off'
           />
           <Input
             style={{ marginTop: 20 }}

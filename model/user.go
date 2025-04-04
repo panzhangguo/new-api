@@ -19,8 +19,9 @@ type User struct {
 	Username         string         `json:"username" gorm:"unique;index" validate:"max=12"`
 	Password         string         `json:"password" gorm:"not null;" validate:"min=8,max=20"`
 	DisplayName      string         `json:"display_name" gorm:"index" validate:"max=20"`
-	Role             int            `json:"role" gorm:"type:int;default:1"`   // admin, common
-	Status           int            `json:"status" gorm:"type:int;default:1"` // enabled, disabled
+	MobilePhone      string         `json:"mobile_phone" gorm:"type:varchar(11);" validate:"max=11"` // pfee 添加手机号码
+	Role             int            `json:"role" gorm:"type:int;default:1"`                          // admin, common
+	Status           int            `json:"status" gorm:"type:int;default:1"`                        // enabled, disabled
 	Email            string         `json:"email" gorm:"index" validate:"max=50"`
 	GitHubId         string         `json:"github_id" gorm:"column:github_id;index"`
 	OidcId           string         `json:"oidc_id" gorm:"column:oidc_id;index"`
@@ -363,6 +364,7 @@ func (user *User) Edit(updatePassword bool) error {
 	updates := map[string]interface{}{
 		"username":     newUser.Username,
 		"display_name": newUser.DisplayName,
+		"mobile_phone": newUser.MobilePhone, // pfee 编辑手机号码
 		"group":        newUser.Group,
 		"quota":        newUser.Quota,
 	}
