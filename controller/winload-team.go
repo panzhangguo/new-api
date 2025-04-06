@@ -283,6 +283,27 @@ func SearchTeamUsers(c *gin.Context) {
 	})
 }
 
+func GetAllTeamUsersByTeamId(c *gin.Context) {
+	teamId, _ := strconv.Atoi(c.Param("team_id"))
+
+	users, total, err := model.GetAllTeamUsersByTeamId(teamId)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data": gin.H{
+			"items": users,
+			"total": total,
+		},
+	})
+}
+
 func GetTeamsForAdmin(c *gin.Context) {
 	teams, total, err := model.GetTeamsForAdmin()
 	if err != nil {

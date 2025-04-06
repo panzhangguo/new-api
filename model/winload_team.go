@@ -271,7 +271,7 @@ func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num i
 	query := tx.Unscoped().Model(&WinloadUserTeam{})
 
 	likeKeyword := "%" + keyword + "%"
-	query.Select("users.username, users.display_name, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+	query.Select("users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
 		Joins("left join users on winload_user_teams.user_id = users.id")
 	query = query.Where("users.username LIKE ? OR users.email LIKE ? OR users.display_name LIKE ?", likeKeyword, likeKeyword, likeKeyword)
 
@@ -294,6 +294,53 @@ func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num i
 		Limit(num).
 		Offset(startIdx).
 		Scan(&teamUsers).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, 0, err
+	}
+
+	// 提交事务
+	if err = tx.Commit().Error; err != nil {
+		return nil, 0, err
+	}
+
+	return teamUsers, total, nil
+}
+
+func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) {
+	// var users []*User
+	var teamUsers []*dto.WinloadTeamUser
+	var total int64
+	var err error
+
+	// 开始事务
+	// 开始事务
+	tx := DB.Begin()
+	if tx.Error != nil {
+		return nil, 0, tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// 构建基础查询
+	query := tx.Unscoped().Model(&WinloadUserTeam{})
+
+	query.Select("users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able,winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+		Joins("left join users on winload_user_teams.user_id = users.id")
+
+	query = query.Where("winload_user_teams.team_id = (?)", teamId)
+
+	// 获取总数
+	err = query.Count(&total).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, 0, err
+	}
+
+	err = query.Order("winload_user_teams.updated_at desc").Scan(&teamUsers).Error
 	if err != nil {
 		tx.Rollback()
 		return nil, 0, err
