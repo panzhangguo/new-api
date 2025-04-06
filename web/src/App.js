@@ -30,6 +30,7 @@ import Console from './pages/Console/index.js';
 import OperationBackground from './pages/OperationBackground/index.js';
 import Account from './pages/Account/index.js';
 import MyTeam from './pages/MyTeam/index.js';
+import AddTeam from './components/winload/AddTeam.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -323,6 +324,16 @@ function App() {
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                   <MyTeam />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/account/create-team'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <AddTeam />
                 </Suspense>
               </PrivateRoute>
             }

@@ -35,7 +35,7 @@ import a from '@douyinfe/semi-ui/lib/es/markdownRender/components/a.js';
 
 // 自定义顶部栏样式
 const headerStyle = {
-  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+  // boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)', // pfee不要shadow
   borderBottom: '1px solid var(--semi-color-border)',
   background: 'var(--semi-color-bg-0)',
   transition: 'all 0.3s ease',

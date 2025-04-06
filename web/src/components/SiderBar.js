@@ -139,12 +139,13 @@ const SiderBar = () => {
             ? ''
             : 'tableHiddle',
       },
-      {
-        text: t('API令牌'),
-        itemKey: 'token',
-        to: '/token',
-        icon: <IconKey />,
-      },
+      // pfee 迁移至独立菜单 tokenItems
+      // {
+      //   text: t('API令牌'),
+      //   itemKey: 'token',
+      //   to: '/token',
+      //   icon: <IconKey />,
+      // },
       {
         text: t('使用日志'),
         itemKey: 'log',
@@ -180,19 +181,13 @@ const SiderBar = () => {
     ],
   );
 
-  const financeItems = useMemo(
+  const tokenItems = useMemo(
     () => [
       {
-        text: t('钱包'),
-        itemKey: 'topup',
-        to: '/topup',
-        icon: <IconCreditCard />,
-      },
-      {
-        text: t('个人设置'),
-        itemKey: 'personal',
-        to: '/personal',
-        icon: <IconUser />,
+        text: t('API令牌'),
+        itemKey: 'token',
+        to: '/token',
+        icon: <IconKey />,
       },
     ],
     [t],
@@ -454,6 +449,18 @@ const SiderBar = () => {
           />
         ))}
 
+        <Divider style={dividerStyle} />
+        {!isCollapsed && <Text style={groupLabelStyle}>{t('令牌/密钥')}</Text>}
+        {tokenItems.map((item) => (
+          <Nav.Item
+            key={item.itemKey}
+            itemKey={item.itemKey}
+            text={item.text}
+            icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+            className={item.className}
+          />
+        ))}
+
         {isAdmin() && (
           <>
             {/* Divider */}
@@ -474,7 +481,7 @@ const SiderBar = () => {
         )}
 
         {/* Divider */}
-        <Divider style={dividerStyle} />
+        {/* <Divider style={dividerStyle} /> */}
 
         {/* Finance Management Section */}
         {/* {!isCollapsed && <Text style={groupLabelStyle}>{t('个人中心')}</Text>}

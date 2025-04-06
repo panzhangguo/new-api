@@ -18,7 +18,7 @@ const Console = () => {
                     top: '56px',
                     zIndex: 99,
                     background: 'var(--semi-color-bg-1)',
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                    // boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)', // pfee不要shadow
                     border: 'none',
                     paddingRight: '0',
                     height: 'calc(100vh - 56px)',

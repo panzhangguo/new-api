@@ -40,6 +40,7 @@ import {
 import TelegramLoginButton from 'react-telegram-login';
 import { useTranslation } from 'react-i18next';
 import { isOperationChatsShow, isPersinoalInviteShow, isPersionalEmailShow, isPersionalGenerateAccessTokenShow, isPersionalGithubShow, isPersionalLinuxDOShow, isPersionalNotificationShow, isPersionalOIDCShow, isPersionalTelegramShow, isPersionalWecharShow } from '../expand/config';
+import JoinTeam from './winload/JoinTeam';
 
 const PersonalSetting = () => {
     const [userState, userDispatch] = useContext(UserContext);
@@ -787,6 +788,14 @@ const PersonalSetting = () => {
                                 </Modal>
                             </div>
                         </Card>
+                        {/* pfee 添加团队信息入口 */}
+                        <Card style={{ marginTop: 10 }}>
+                            <Typography.Title heading={6}>{t('团队信息')}</Typography.Title>
+                            <div style={{ marginTop: 10 }}>
+                                <JoinTeam />
+                            </div>
+                        </Card>
+                        {/* pfee 添加团队信息入口 */}
                         <Card style={{marginTop: 10,display: isPersionalNotificationShow ? 'block' : 'none'}}>
                             <Typography.Title heading={6}>{t('通知设置')}</Typography.Title>
                             <div style={{marginTop: 20}}>

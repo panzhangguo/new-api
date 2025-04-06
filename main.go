@@ -13,6 +13,7 @@ import (
 	"one-api/router"
 	"one-api/service"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/bytedance/gopkg/util/gopool"
@@ -155,6 +156,17 @@ func main() {
 	server.Use(sessions.Sessions("session", store))
 
 	router.SetRouter(server, buildFS, indexPage)
+
+	/* pfee 配置静态文件服务 */
+	currentDir, err := os.Getwd()
+	if err != nil {
+		common.FatalLog("failed to get current directory: " + err.Error())
+	}
+	projectRoot := filepath.Dir(currentDir)
+	uploadPath := filepath.Join(projectRoot, "upload")
+	server.StaticFS("/upload", http.Dir(uploadPath))
+	/* pfee 配置静态文件服务 */
+
 	var port = os.Getenv("PORT")
 	if port == "" {
 		port = strconv.Itoa(*common.Port)
