@@ -189,6 +189,12 @@ func SetApiRouter(router *gin.Engine) {
 			winloadTeamRoute.GET("/self_all", controller.GetSelfTeams)
 			winloadTeamRoute.POST("/avatar", controller.UploadTeamAvatar)
 			winloadTeamRoute.GET("/team_users", controller.SearchTeamUsers)
+			winloadTeamRoute.GET("/:id", controller.GetTeamById)
 		}
+		winloadTeamRoute.Use(middleware.RootAuth())
+		{
+			winloadTeamRoute.GET("/all_teams", controller.GetTeamsForAdmin)
+		}
+
 	}
 }

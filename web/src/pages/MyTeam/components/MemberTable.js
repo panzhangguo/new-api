@@ -23,7 +23,6 @@ const MemberTable = (props, ref) => {
 
     const reload = () => {
         loadTeamUsers(activePage, pageSize);
-
     };
     useImperativeHandle(ref, () => ({
         reload,
@@ -57,7 +56,7 @@ const MemberTable = (props, ref) => {
                         prefixIcon: <IconTickCircle />,
                         text: '所有者',
                     },
-                    2: { color: 'pink', prefixIcon: <IconUser />, text: '成员' },
+                    2: { color: 'light-blue', prefixIcon: <IconUser />, text: '成员' },
                     3: { color: 'red', prefixIcon: <IconAlarm />, text: '待审' },
                 };
                 const tagProps = tagConfig[text];
@@ -86,19 +85,10 @@ const MemberTable = (props, ref) => {
         },
     ];
 
-    // useEffect(() => {
-    //     if (flag.current) {
-    //         flag.current = false;
-    //         return;
-    //     }
-    //     loadTeamUsers(0, pageSize);
-    // }, []);
-
     const loadTeamUsers = async (startIdx, pageSize) => {
         setLoading(true);
-        const res = await API.get(
-            `/api/winload-team/team_users/?keyword=${props.searchKey}&team_id=${props.teamId}&p=${startIdx}&page_size=${pageSize}`,
-        ).finally(() => {
+        const url = `/api/winload-team/team_users/?keyword=${props.searchKey}&team_id=${props.teamId}&p=${startIdx}&page_size=${pageSize}&status=${props.userStatus}`
+        const res = await API.get(url).finally(() => {
             setLoading(false);
         });
         const { success, message, data } = res.data;

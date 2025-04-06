@@ -46,6 +46,7 @@ const EditTeam = (props) => {
         avatar: props.team.avatar,
         description: props.team.description,
         is_shared_key: props.team.is_shared_key,
+        joining_approval: props.team.joining_approval ?? true,
         files: [
             {
                 uid: '1',
@@ -199,6 +200,17 @@ const EditTeam = (props) => {
                                             { required: true, message: '必须选择是否共享 ' },
                                         ]}
                                     >
+                                        <Radio value={true}>是</Radio>
+                                        <Radio value={false}>否</Radio>
+                                    </RadioGroup>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col span={24}>
+                                    <RadioGroup field="joining_approval" label='是否审核人员加入' rules={[
+                                        { type: 'boolean' },
+                                        { required: true, message: '加入需审核' }
+                                    ]}>
                                         <Radio value={true}>是</Radio>
                                         <Radio value={false}>否</Radio>
                                     </RadioGroup>

@@ -10,6 +10,7 @@ const AddTeam = () => {
     const initValues = {
         name: '',
         is_shared_key: true,
+        joining_approval: true,
         avatar: '',
         files: []
     };
@@ -78,7 +79,6 @@ const AddTeam = () => {
                                     ]}
                                 />
                             </Col>
-
                         </Row>
                         <Row>
                             <Col span={24}>
@@ -99,7 +99,7 @@ const AddTeam = () => {
                         <Row>
                             <Col span={24}>
                                 <TextArea
-                                    style={{ height: 120 }}
+                                    style={{ height: 80 }}
                                     field='description'
                                     label='介绍'
                                     placeholder='请填写介绍'
@@ -109,7 +109,7 @@ const AddTeam = () => {
                     </Section>
                     <Section text='详情'>
                         <Row>
-                            <Col>
+                            <Col span={24}>
                                 <RadioGroup field="is_shared_key" label='是否共享资源（个人令牌）' rules={[
                                     { type: 'boolean' },
                                     { required: true, message: '必须选择是否共享 ' }
@@ -119,14 +119,26 @@ const AddTeam = () => {
                                 </RadioGroup>
                             </Col>
                         </Row>
+                        <Row>
+                            <Col span={24}>
+                                <RadioGroup field="joining_approval" label='是否审核人员加入' rules={[
+                                    { type: 'boolean' },
+                                    { required: true, message: '加入需审核' }
+                                ]}>
+                                    <Radio value={true}>是</Radio>
+                                    <Radio value={false}>否</Radio>
+                                </RadioGroup>
+                            </Col>
+                        </Row>
                     </Section>
-                    <div style={{ display: 'flex', justifyContent: 'flex-center', gap: "14px", width: '100%', paddingTop: "30px" }}>
-                        <Button type="primary" theme="solid" htmlType="submit" className="btn-margin-right" >提交(submit)</Button>
-                        <Button htmlType="reset">重置(reset)</Button>
-                    </div>
+                    <Section>
+                        <div style={{ display: 'flex', justifyContent: 'flex-center', gap: "14px", width: '100%', paddingTop: "30px" }}>
+                            <Button type="primary" theme="solid" htmlType="submit" className="btn-margin-right" >提交(submit)</Button>
+                            <Button htmlType="reset">重置(reset)</Button>
+                        </div>
+                    </Section>
                 </Form>
             </div>
-
         </Spin>
     );
 };

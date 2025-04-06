@@ -9,28 +9,32 @@ import (
 )
 
 type WinloadTeam struct {
-	Id          int       `json:"id"`
-	Name        string    `json:"name" validate:"required"`                              // 团队名称
-	Code        string    `json:"code" validate:"required,contains=wtc,min=32,max=32"`   // 团队码
-	Leader      int       `json:"leader" gorm:"index:idx_leader_id" validate:"required"` // 团队负责人id
-	Owner       int       `json:"owner" gorm:"index:idx_owner_id" validate:"required"`   // 团队创建人id
-	OwnerName   string    `json:"owner_name"`                                            // 团队创建人id
-	IsSharedKey bool      `json:"is_shared_key" gorm:"type:boolean;"`                    // 是否共享密钥
-	Avatar      string    `json:"avatar"`
-	Description string    `json:"description"`
-	CreatedAt   time.Time `json:"created_at" gorm:"bigint;index:idx_created_at_id,priority:2;"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	Id              int       `json:"id"`
+	Name            string    `json:"name" validate:"required"`                              // 团队名称
+	Code            string    `json:"code" validate:"required,contains=wtc,min=32,max=32"`   // 团队码
+	Leader          int       `json:"leader" gorm:"index:idx_leader_id" validate:"required"` // 团队负责人id
+	Owner           int       `json:"owner" gorm:"index:idx_owner_id" validate:"required"`   // 团队创建人id
+	OwnerName       string    `json:"owner_name"`                                            // 团队创建人id
+	IsSharedKey     bool      `json:"is_shared_key" gorm:"type:boolean;"`                    // 是否共享密钥
+	JoiningApproval bool      `json:"joining_approval" gorm:"type:boolean;"`                 // 加入团队是否需要审核
+	Avatar          string    `json:"avatar"`
+	Description     string    `json:"description"`
+	CreatedAt       time.Time `json:"created_at" gorm:"bigint;index:idx_created_at_id,priority:2;"`
+	UpdatedAt       time.Time `json:"updated_at"`
 }
 
 type WinloadUserTeam struct {
-	Id        int         `json:"id"`
-	UserId    int         `json:"user_id" gorm:"index:idx_user_id_team_id primaryKey"`
-	TeamId    int         `json:"team_id" gorm:"index:idx_user_id_team_id primaryKey"`
-	IsOwner   bool        `json:"is_owner" gorm:"type:boolean;"`
-	Status    int         `json:"status" gorm:"type:int;"` // 人员的状态 User2TeamStatus
-	Team      WinloadTeam `json:"team" gorm:"references:Id;foreignKey:TeamId;"`
-	CreatedAt time.Time   `json:"created_at"`
-	UpdatedAt time.Time   `json:"updated_at"`
+	Id                  int         `json:"id"`
+	UserId              int         `json:"user_id" gorm:"index:idx_user_id_team_id primaryKey"`
+	TeamId              int         `json:"team_id" gorm:"index:idx_user_id_team_id primaryKey"`
+	IsOwner             bool        `json:"is_owner" gorm:"type:boolean;"`
+	Status              int         `json:"status" gorm:"type:int;"`                    // 人员的状态 User2TeamStatus
+	Editable            bool        `json:"editable" gorm:"type:boolean;"`              // 人员是否有编辑权限
+	JoiningApprovalAble bool        `json:"joining_approval_able" gorm:"type:boolean;"` // 人员是否有审批人员加入权限
+	InAuthorizedGroup   bool        `json:"in_authorized_group" gorm:"type:boolean;"`   // 是否在权限组
+	Team                WinloadTeam `json:"team" gorm:"references:Id;foreignKey:TeamId;"`
+	CreatedAt           time.Time   `json:"created_at"`
+	UpdatedAt           time.Time   `json:"updated_at"`
 }
 
 const (
@@ -55,6 +59,12 @@ func generateUniqueTeamCode() (string, error) {
 		attempt++
 	}
 	return "", errors.New("failed to generate unique team code after multiple attempts")
+}
+
+func GetUser2TeamByUserId(userId int, teamId int) (WinloadUserTeam, error) {
+	var user2team WinloadUserTeam
+	err := DB.Model(&WinloadUserTeam{}).Where("user_id = ? AND team_id = ?", userId, teamId).First(&user2team).Error
+	return user2team, err
 }
 
 func (team *WinloadTeam) Insert() error {
@@ -85,10 +95,13 @@ func (team *WinloadTeam) Insert() error {
 
 	// 插入用户-团队关系
 	relation := WinloadUserTeam{
-		UserId:  team.Owner,
-		TeamId:  team.Id,
-		IsOwner: true,
-		Status:  common.User2TeamStatus["Owner"],
+		UserId:              team.Owner,
+		TeamId:              team.Id,
+		IsOwner:             true,
+		Editable:            true,
+		JoiningApprovalAble: true,
+		InAuthorizedGroup:   true,
+		Status:              common.User2TeamStatus["Owner"],
 	}
 	if err := tx.Create(&relation).Error; err != nil {
 		tx.Rollback()
@@ -159,10 +172,11 @@ func (team *WinloadTeam) UpdateTeam(teamId int) error {
 
 	newTeam := *team
 	updates := map[string]interface{}{
-		"name":          newTeam.Name,
-		"is_shared_key": newTeam.IsSharedKey,
-		"avatar":        newTeam.Avatar,
-		"description":   newTeam.Description,
+		"name":             newTeam.Name,
+		"is_shared_key":    newTeam.IsSharedKey,
+		"joining_approval": newTeam.JoiningApproval,
+		"avatar":           newTeam.Avatar,
+		"description":      newTeam.Description,
 	}
 
 	DB.First(&team, teamId)
@@ -185,6 +199,18 @@ func GetTeamByCode(code string) (*WinloadTeam, error) {
 	return &team, err
 }
 
+func GetTeamById(teamId int) (*WinloadTeam, error) {
+	// 通过code查找团队
+	team := WinloadTeam{Id: teamId}
+	var err error = nil
+	err = DB.First(&team, "id = ?", teamId).Error
+
+	return &team, err
+}
+
+/**
+ * 根据团队码加入团队
+ */
 func JoinTeamByCode(code string, userId int) error {
 	var err error = nil
 	team := WinloadTeam{Code: code}
@@ -201,13 +227,21 @@ func JoinTeamByCode(code string, userId int) error {
 		return errors.New("用户已经加入团队")
 	}
 	// user2steam := DB.First(&WinloadUserTeam{}, "user_id = ? and code = ?", userId, code)
-
+	// 判断加入是否需要审核
+	status := common.User2TeamStatus["member"]
+	if team.JoiningApproval {
+		// 需要审核
+		status = common.User2TeamStatus["joining"]
+	}
 	// 插入用户-团队关系
 	cleanUser2team := WinloadUserTeam{
-		UserId:  userId,
-		TeamId:  team.Id,
-		IsOwner: false,
-		Status:  common.User2TeamStatus["joining"],
+		UserId:              userId,
+		TeamId:              team.Id,
+		IsOwner:             false,
+		Editable:            false,
+		JoiningApprovalAble: false,
+		InAuthorizedGroup:   false,
+		Status:              status,
 	}
 
 	if err = DB.Create(&cleanUser2team).Error; err != nil {
@@ -216,7 +250,7 @@ func JoinTeamByCode(code string, userId int) error {
 	return nil
 }
 
-func SearchTeamUsers(keyword string, teamId int, startIdx int, num int) ([]*dto.WinloadTeamUser, int64, error) {
+func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num int) ([]*dto.WinloadTeamUser, int64, error) {
 	// var users []*User
 	var teamUsers []*dto.WinloadTeamUser
 	var total int64
@@ -235,6 +269,16 @@ func SearchTeamUsers(keyword string, teamId int, startIdx int, num int) ([]*dto.
 
 	// 构建基础查询
 	query := tx.Unscoped().Model(&WinloadUserTeam{})
+
+	likeKeyword := "%" + keyword + "%"
+	query.Select("users.username, users.display_name, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+		Joins("left join users on winload_user_teams.user_id = users.id")
+	query = query.Where("users.username LIKE ? OR users.email LIKE ? OR users.display_name LIKE ?", likeKeyword, likeKeyword, likeKeyword)
+
+	if status != 0 {
+		query = query.Where("winload_user_teams.status = ?", status)
+	}
+
 	query = query.Where("winload_user_teams.team_id = (?)", teamId)
 
 	// 获取总数
@@ -243,10 +287,6 @@ func SearchTeamUsers(keyword string, teamId int, startIdx int, num int) ([]*dto.
 		tx.Rollback()
 		return nil, 0, err
 	}
-	likeKeyword := "%" + keyword + "%"
-	query.Select("users.username, users.display_name, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
-		Joins("left join users on winload_user_teams.user_id = users.id")
-	query = query.Where("users.username LIKE ? OR users.email LIKE ? OR users.display_name LIKE ?", likeKeyword, likeKeyword, likeKeyword)
 
 	// 获取分页数据
 	err = query.Omit("password").
@@ -265,4 +305,44 @@ func SearchTeamUsers(keyword string, teamId int, startIdx int, num int) ([]*dto.
 	}
 
 	return teamUsers, total, nil
+}
+
+// 平台获取查询所有团队
+func GetTeamsForAdmin() ([]*dto.WinloadTeamForAdmin, int64, error) {
+	var teams []*dto.WinloadTeamForAdmin
+	var total int64
+	var err error
+
+	// 开始事务
+	tx := DB.Begin()
+	if tx.Error != nil {
+		return nil, 0, tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	// 构建基础查询
+	query := tx.Unscoped().Model(&WinloadTeam{})
+	err = query.Count(&total).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, 0, err
+	}
+	query.Select("winload_teams.id, users.username, users.display_name, winload_teams.name, winload_teams.code, winload_teams.avatar, winload_teams.description, winload_teams.created_at").
+		Joins("left join users on winload_teams.owner = users.id")
+
+	err = query.Scan(&teams).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, 0, err
+	}
+
+	// 提交事务
+	if err = tx.Commit().Error; err != nil {
+		return nil, 0, err
+	}
+	return teams, total, err
 }

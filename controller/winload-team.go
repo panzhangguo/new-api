@@ -122,6 +122,15 @@ func UpdateTeamCode(c *gin.Context) {
 		})
 		return
 	}
+	// 判断用户是否有更新权限
+	user2steam, _ := model.GetUser2TeamByUserId(c.GetInt("id"), team.Id)
+	if !user2steam.IsOwner && !user2steam.Editable {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "您没有更新团队信息的权限",
+		})
+		return
+	}
 
 	code, err := model.UpdateTeamCode(&team)
 
@@ -150,12 +159,22 @@ func UpdateTeam(c *gin.Context) {
 		})
 		return
 	}
+	// 判断用户是否有更新权限
+	user2steam, _ := model.GetUser2TeamByUserId(c.GetInt("id"), team.Id)
+	if !user2steam.IsOwner && !user2steam.Editable {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "您没有更新团队信息的权限",
+		})
+		return
+	}
 
 	cleanTeam := model.WinloadTeam{
-		IsSharedKey: team.IsSharedKey,
-		Name:        team.Name,
-		Description: team.Description,
-		Avatar:      team.Avatar,
+		IsSharedKey:     team.IsSharedKey,
+		JoiningApproval: team.JoiningApproval,
+		Name:            team.Name,
+		Description:     team.Description,
+		Avatar:          team.Avatar,
 	}
 
 	err = cleanTeam.UpdateTeam(team.Id)
@@ -169,6 +188,23 @@ func UpdateTeam(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "更新团队信息成功",
+	})
+}
+
+func GetTeamById(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id")) // 获取路径参数 :id 的值
+	team, err := model.GetTeamById(id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "获取团队信息失败" + err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "获取团队信息成功",
+		"data":    team,
 	})
 }
 
@@ -219,6 +255,7 @@ func SearchTeamUsers(c *gin.Context) {
 	teamId, _ := strconv.Atoi(c.Query("team_id"))
 	p, _ := strconv.Atoi(c.Query("p"))
 	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+	status, _ := strconv.Atoi(c.Query("status"))
 	if p < 1 {
 		p = 1
 	}
@@ -226,7 +263,7 @@ func SearchTeamUsers(c *gin.Context) {
 		pageSize = common.ItemsPerPage
 	}
 	startIdx := (p - 1) * pageSize
-	users, total, err := model.SearchTeamUsers(keyword, teamId, startIdx, pageSize)
+	users, total, err := model.SearchTeamUsers(keyword, status, teamId, startIdx, pageSize)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -242,6 +279,25 @@ func SearchTeamUsers(c *gin.Context) {
 			"total":     total,
 			"page":      p,
 			"page_size": pageSize,
+		},
+	})
+}
+
+func GetTeamsForAdmin(c *gin.Context) {
+	teams, total, err := model.GetTeamsForAdmin()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data": gin.H{
+			"items": teams,
+			"total": total,
 		},
 	})
 }

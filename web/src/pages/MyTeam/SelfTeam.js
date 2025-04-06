@@ -1,8 +1,11 @@
 import {
     IconEdit,
     IconEdit2Stroked,
+    IconPlus,
     IconRefresh,
     IconSearch,
+    IconUnlock,
+    IconUser,
     IconUserGroup,
 } from '@douyinfe/semi-icons';
 import {
@@ -16,13 +19,15 @@ import {
     TabPane,
     Button,
     Input,
-    Typography, Tooltip
+    Typography,
+    Tooltip,
 } from '@douyinfe/semi-ui';
 import { useEffect, useState, useRef } from 'react';
 import { SERVER_ATTACHMENT_URL } from '../../expand/env';
 import MemberTable from './components/MemberTable';
-import { API, copy } from '../../helpers';
+import { API, copy, showError } from '../../helpers';
 import EditTeam from './EditTeam';
+import AuthTable from './components/AuthTable';
 const teamDefaultInfo = [
     {
         field: 'name',
@@ -45,6 +50,7 @@ const teamDefaultInfo = [
         ),
     },
     { field: 'is_shared_key', key: '密钥共享', value: '密钥共享' },
+    { field: 'joining_approval', key: '加入审核', value: '加入审核' },
     {
         field: 'description',
         key: '介绍',
@@ -59,8 +65,11 @@ const SelfTeam = (props) => {
     const [selectedTeam, setSelectedTeam] = useState(props.teams[0]);
     const [teamInfo, setTeamInfo] = useState(teamDefaultInfo);
     const [searchKey, setSearchKey] = useState('');
+    const [userStatus, setUserStatus] = useState(0);
     const MemberTableRef = useRef();
+    const AuthTableRef = useRef();
     const [codeSpinning, setCodeSpinning] = useState(false);
+    const [activeKey, setActiveKey] = useState('2');
     const flag = useRef(true);
 
     // const [isOwner] = useState(props.teams[0]['is_owner']);
@@ -68,26 +77,36 @@ const SelfTeam = (props) => {
         MemberTableRef.current.reload();
     };
 
+
+    const openAuth = () => {
+        AuthTableRef.current.openAuth();
+    }
+
     const updateCode = async () => {
-        setCodeSpinning(true)
-        const { data: res } = await API.post('/api/winload-team/update_code', selectedTeam.team).finally(() => {
-            setCodeSpinning(false)
+        setCodeSpinning(true);
+        const { data: res } = await API.post(
+            '/api/winload-team/update_code',
+            selectedTeam.team,
+        ).finally(() => {
+            setCodeSpinning(false);
         });
-        const { data, success } = res
+        const { data, success, message } = res;
         if (success) {
             setSelectedTeam({
                 ...selectedTeam,
                 team: {
                     ...selectedTeam.team,
-                    code: data
-                }
-            })
+                    code: data,
+                },
+            });
+        } else {
+            showError(message)
         }
-    }
+    };
 
     const copyCode = async (code) => {
         await copy(code);
-    }
+    };
     const createDescription = (team) => {
         const teamInfo = [
             {
@@ -107,9 +126,13 @@ const SelfTeam = (props) => {
                         <Tooltip content='点击复制'>
                             <span onClick={() => copyCode(team.code)}>{team.code}</span>
                         </Tooltip>
-                        {
-                            selectedTeam.is_owner && <IconRefresh spin={codeSpinning} style={{ color: '#9C27B0' }} onClick={updateCode} />
-                        }
+                        {(selectedTeam.is_owner || selectedTeam.editable) && (
+                            <IconRefresh
+                                spin={codeSpinning}
+                                style={{ color: '#9C27B0' }}
+                                onClick={updateCode}
+                            />
+                        )}
                     </div>
                 ),
             },
@@ -123,26 +146,38 @@ const SelfTeam = (props) => {
                 field: 'is_shared_key',
                 key: '密钥共享',
                 value: (
-                    <Tag
-                        size='small'
-                        color={team.is_shared_key ? 'light-blue' : 'red'}
-                    >
+                    <Tag size='small' color={team.is_shared_key ? 'light-blue' : 'red'}>
                         {team.is_shared_key ? '是' : '否'}
                     </Tag>
                 ),
             },
             {
-                field: 'description', key: '介绍', value:
+                field: 'joining_approval',
+                key: '加入审核',
+                value: (
+                    <Tag
+                        size='small'
+                        color={team.joining_approval ? 'light-blue' : 'red'}
+                    >
+                        {team.joining_approval ? '是' : '否'}
+                    </Tag>
+                ),
+            },
+            {
+                field: 'description',
+                key: '介绍',
+                value: (
                     <Text
                         ellipsis={{
                             showTooltip: {
-                                opts: { content: team.description }
-                            }
+                                opts: { content: team.description },
+                            },
                         }}
-                        style={{ width: "300px" }}
+                        style={{ width: '100%' }}
                     >
                         {team.description}
                     </Text>
+                ),
             },
         ];
         return teamInfo;
@@ -154,18 +189,19 @@ const SelfTeam = (props) => {
             return;
         }
         setTeamInfo(createDescription(selectedTeam.team));
-        searchMember()
-    }, [selectedTeam]);
+        searchMember();
+    }, [selectedTeam, userStatus]);
 
     const editSuccess = async () => {
-        const res = await props.getTeams()
-        const currentTeam = res.find(item => item.id === selectedTeam.id)
-        setSelectedTeam(currentTeam)
-    }
+        const res = await props.getTeams();
+        const currentTeam = res.find((item) => item.id === selectedTeam.id);
+        setSelectedTeam(currentTeam);
+    };
 
     const changeTeam = (user2teamId) => {
-        const team = props.teams.find(item => item.id === user2teamId)
+        const team = props.teams.find((item) => item.id === user2teamId);
         setSelectedTeam(team);
+        setActiveKey('1')
     };
 
     return (
@@ -213,9 +249,12 @@ const SelfTeam = (props) => {
                                 );
                             })}
                         </Select>
-                        {
-                            selectedTeam.is_owner && <EditTeam team={selectedTeam.team} editSuccess={editSuccess}></EditTeam>
-                        }
+                        {(selectedTeam.is_owner || selectedTeam.editable) && (
+                            <EditTeam
+                                team={selectedTeam.team}
+                                editSuccess={editSuccess}
+                            ></EditTeam>
+                        )}
                     </div>
                 </div>
                 <Divider></Divider>
@@ -228,37 +267,78 @@ const SelfTeam = (props) => {
                     />
                 </div>
                 <Divider></Divider>
-                <div style={{ padding: '16px 20px' }}>
+                <div style={{ padding: '16px 0px' }}>
                     <Tabs
                         type='button'
+                        activeKey={activeKey}
+                        onChange={(val) => setActiveKey(val)}
                         tabBarExtraContent={
-                            <>
-                                <Input
-                                    value={searchKey}
-                                    onChange={setSearchKey}
-                                    placeholder='姓名查询成员'
-                                    style={{ width: '160px' }}
-                                    suffix={
-                                        <IconSearch
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={searchMember}
-                                        />
-                                    }
-                                    showClear
-                                ></Input>
-                            </>
+                            activeKey === '1' ? (
+                                <>
+                                    <Select
+                                        onChange={(value) => {
+                                            setUserStatus(value);
+                                        }}
+                                        value={userStatus}
+                                        style={{ marginRight: '10px' }}
+                                    >
+                                        <Select.Option value={0}>全部</Select.Option>
+                                        <Select.Option value={1}>所有者</Select.Option>
+                                        <Select.Option value={2}>成员</Select.Option>
+                                        <Select.Option value={3}>待审</Select.Option>
+                                    </Select>
+                                    <Input
+                                        value={searchKey}
+                                        onChange={setSearchKey}
+                                        placeholder='姓名查询成员'
+                                        style={{ width: '160px' }}
+                                        suffix={
+                                            <IconSearch
+                                                style={{ cursor: 'pointer' }}
+                                                onClick={searchMember}
+                                            />
+                                        }
+                                        showClear
+                                    ></Input>
+                                </>
+                            ) : activeKey === '2' ? (
+                                <>
+                                    <Button onClick={openAuth} theme='solid' type='primary' color='light-blue'><IconPlus />添加权限</Button>
+                                </>
+                            ) : null
                         }
                     >
-                        <TabPane tab='用户' itemKey='1'>
+                        <TabPane
+                            tab={
+                                <span>
+                                    <IconUserGroup />
+                                    用户
+                                </span>
+                            }
+                            itemKey='1'
+                        >
                             <MemberTable
                                 searchKey={searchKey}
+                                userStatus={userStatus}
                                 teamId={selectedTeam.team_id}
                                 ref={MemberTableRef}
                             ></MemberTable>
                         </TabPane>
-                        <TabPane tab='权限' itemKey='2'>
-                            权限列表
-                        </TabPane>
+                        {
+                            selectedTeam.is_owner && <TabPane
+                                tab={
+                                    <span>
+                                        <IconUnlock />
+                                        权限
+                                    </span>
+                                }
+                                itemKey='2'>
+                                <AuthTable
+                                    teamId={selectedTeam.team_id}
+                                    ref={AuthTableRef}
+                                ></AuthTable>
+                            </TabPane>
+                        }
                     </Tabs>
                 </div>
             </div>
