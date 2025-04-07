@@ -62,7 +62,9 @@ const teamDefaultInfo = [
 const SelfTeam = (props) => {
     const { Text } = Typography;
     // const { teams } = props;
-    const [selectedTeam, setSelectedTeam] = useState(props.teams[0]);
+    // 默认为自己的团队
+    const defaultTeam = props.teams.find(team => team.is_owner);
+    const [selectedTeam, setSelectedTeam] = useState(defaultTeam);
     const [teamInfo, setTeamInfo] = useState(teamDefaultInfo);
     const [searchKey, setSearchKey] = useState('');
     const [userStatus, setUserStatus] = useState(0);
@@ -71,7 +73,6 @@ const SelfTeam = (props) => {
     const [codeSpinning, setCodeSpinning] = useState(false);
     const [activeKey, setActiveKey] = useState('1');
     const flag = useRef(true);
-    const authflag = useRef(true);
 
     // const [isOwner] = useState(props.teams[0]['is_owner']);
     const searchMember = () => {
@@ -276,7 +277,8 @@ const SelfTeam = (props) => {
                 <Divider></Divider>
                 <div style={{ padding: '16px 0px' }}>
                     <Tabs
-                        type='button'
+                        type="card"
+                        collapsible
                         activeKey={activeKey}
                         onChange={(val) => setActiveKey(val)}
                         tabBarExtraContent={

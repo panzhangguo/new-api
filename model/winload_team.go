@@ -11,7 +11,7 @@ import (
 type WinloadTeam struct {
 	Id              int       `json:"id"`
 	Name            string    `json:"name" validate:"required"`                              // 团队名称
-	Code            string    `json:"code" validate:"required,contains=wtc,min=32,max=32"`   // 团队码
+	Code            string    `json:"code" validate:"required,contains=TEAM_"`               // 团队码
 	Leader          int       `json:"leader" gorm:"index:idx_leader_id" validate:"required"` // 团队负责人id
 	Owner           int       `json:"owner" gorm:"index:idx_owner_id" validate:"required"`   // 团队创建人id
 	OwnerName       string    `json:"owner_name"`                                            // 团队创建人id
@@ -127,9 +127,15 @@ func (team *WinloadTeam) GetSelfTeam(userId int) (*WinloadTeam, error) {
 	return team, nil
 }
 
-func GetTeamsByUserId(userId int) ([]WinloadUserTeam, error) {
+func GetTeamsByUserId(userId int, containjoining bool) ([]WinloadUserTeam, error) {
 	var user2teams []WinloadUserTeam
-	err := DB.Model(&WinloadUserTeam{}).Where("user_id = ?", userId).Preload("Team").Find(&user2teams).Error
+	query := DB.Model(&WinloadUserTeam{}).Where("user_id = ?", userId)
+
+	if !containjoining {
+		query = query.Where("status <> ?", common.User2TeamStatus["joining"])
+	}
+
+	err := query.Preload("Team").Find(&user2teams).Error
 
 	//user2teams[0].Team.Owner // 获取创建人
 	var teamOwners = []int{}
@@ -315,18 +321,8 @@ func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) 
 	var total int64
 	var err error
 
-	tx := DB.Begin()
-	if tx.Error != nil {
-		return nil, 0, tx.Error
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
 	// 构建基础查询
-	query := tx.Unscoped().Model(&WinloadUserTeam{})
+	query := DB.Model(&WinloadUserTeam{})
 
 	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able, winload_user_teams.clear_teamuser_able, winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
 		Joins("left join users on winload_user_teams.user_id = users.id")
@@ -336,18 +332,11 @@ func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) 
 	// 获取总数
 	err = query.Count(&total).Error
 	if err != nil {
-		tx.Rollback()
 		return nil, 0, err
 	}
 
 	err = query.Order("winload_user_teams.created_at desc").Scan(&teamUsers).Error
 	if err != nil {
-		tx.Rollback()
-		return nil, 0, err
-	}
-
-	// 提交事务
-	if err = tx.Commit().Error; err != nil {
 		return nil, 0, err
 	}
 
@@ -360,22 +349,10 @@ func GetTeamsForAdmin() ([]*dto.WinloadTeamForAdmin, int64, error) {
 	var total int64
 	var err error
 
-	// 开始事务
-	tx := DB.Begin()
-	if tx.Error != nil {
-		return nil, 0, tx.Error
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
 	// 构建基础查询
-	query := tx.Unscoped().Model(&WinloadTeam{})
+	query := DB.Model(&WinloadTeam{})
 	err = query.Count(&total).Error
 	if err != nil {
-		tx.Rollback()
 		return nil, 0, err
 	}
 	query.Select("winload_teams.id, users.username, users.display_name, winload_teams.name, winload_teams.code, winload_teams.avatar, winload_teams.description, winload_teams.created_at").
@@ -383,14 +360,9 @@ func GetTeamsForAdmin() ([]*dto.WinloadTeamForAdmin, int64, error) {
 
 	err = query.Scan(&teams).Error
 	if err != nil {
-		tx.Rollback()
 		return nil, 0, err
 	}
 
-	// 提交事务
-	if err = tx.Commit().Error; err != nil {
-		return nil, 0, err
-	}
 	return teams, total, err
 }
 
@@ -398,17 +370,7 @@ func UpdateUser2TeamInAuthorizedGroup(user2teamGroup []*dto.WinloadTeamUser, inA
 	var user2Teams []WinloadUserTeam
 	var err error
 
-	tx := DB.Begin()
-	if tx.Error != nil {
-		return tx.Error
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
-
-	query := tx.Unscoped().Model(&WinloadUserTeam{})
+	query := DB.Unscoped().Model(&WinloadUserTeam{})
 
 	for i, user2team := range user2teamGroup {
 		if i == 0 {
@@ -420,7 +382,6 @@ func UpdateUser2TeamInAuthorizedGroup(user2teamGroup []*dto.WinloadTeamUser, inA
 
 	err = query.Find(&user2Teams).Error
 	if err != nil {
-		tx.Rollback()
 		return err
 	}
 
@@ -431,7 +392,6 @@ func UpdateUser2TeamInAuthorizedGroup(user2teamGroup []*dto.WinloadTeamUser, inA
 	// 更新用户-团队-权限组关系
 	err = query.Updates(updateFields).Error
 	if err != nil {
-		tx.Rollback()
 		return err
 	}
 	return nil
@@ -456,7 +416,7 @@ func GetTeamAuthorizedGroupUsers(teamId int) ([]*dto.WinloadTeamUser, error) {
 	query := tx.Unscoped().Model(&WinloadUserTeam{})
 	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able, winload_user_teams.clear_teamuser_able, winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
 		Joins("left join users on winload_user_teams.user_id = users.id")
-	query = query.Where("winload_user_teams.team_id = (?) AND winload_user_teams.in_authorized_group = ?", teamId, true)
+	query = query.Where("winload_user_teams.team_id = (?) AND (winload_user_teams.in_authorized_group = ? OR winload_user_teams.is_owner = true)", teamId, true)
 
 	err = query.Order("winload_user_teams.created_at desc").Scan(&teamUsers).Error
 	if err != nil {

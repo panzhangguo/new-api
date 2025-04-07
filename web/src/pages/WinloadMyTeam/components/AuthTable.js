@@ -9,6 +9,7 @@ import {
     Tag,
     Collapse,
     Table,
+    Dropdown,
 } from '@douyinfe/semi-ui';
 import {
     forwardRef,
@@ -25,6 +26,7 @@ import {
     IconClear,
     IconComment,
     IconMore,
+    IconAlertCircle
 } from '@douyinfe/semi-icons';
 import './style.css';
 const AuthTable = (props, ref) => {
@@ -36,7 +38,6 @@ const AuthTable = (props, ref) => {
     const [authUsers, setAuthUsers] = useState([]);
     const [searchText, setSearchText] = useState('');
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const authflag = useRef(true);
 
     const loadTeamUsers = async () => {
         setLoading(true);
@@ -71,7 +72,6 @@ const AuthTable = (props, ref) => {
         });
         const { success, message, data } = res.data;
         if (success) {
-            console.log(data);
             setAuthUsers(data);
             return;
         }
@@ -208,6 +208,14 @@ const AuthTable = (props, ref) => {
             record.clear_teamuser_able = e.target.checked;
         }
 
+        if (key === 'in_authorized_group') {
+            // 退出权限组将清理所有权限
+            record.in_authorized_group = false;
+            record.joining_approval_able = false;
+            record.clear_teamuser_able = false;
+            record.editable = false;
+        }
+
         const res = await API.post(url, record);
         if (!res.data.success) {
             showError(res.data.message);
@@ -245,6 +253,26 @@ const AuthTable = (props, ref) => {
             render: (text, record) => {
                 return (
                     <Checkbox checked={text} size='small' onChange={(val) => { onChangeAuth(record, 'clear_teamuser_able', val) }}></Checkbox>
+                );
+            },
+        },
+        {
+            title: '操作',
+            dataIndex: 'default_authtable_operate',
+            render: (text, record) => {
+                return (
+                    <Dropdown
+                        position='bottomLeft'
+                        render={
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => { onChangeAuth(record, 'in_authorized_group') }} type='danger' icon={<IconAlertCircle />}>
+                                    退出权限组
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        }
+                    >
+                        <IconMore />
+                    </Dropdown>
                 );
             },
         },

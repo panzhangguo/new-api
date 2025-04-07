@@ -1,8 +1,14 @@
+import { IconAlarm, IconBolt, IconFlag, IconLikeHeart, IconSearch } from "@douyinfe/semi-icons"
+import { Card, Input, Row, Col, Tag, Avatar, Typography, Table } from "@douyinfe/semi-ui"
+import MyApiTable from "./MyApiTable";
+import MyTeamApiBox from "./MyTeamApiBox";
+const { Text } = Typography;
+const { Meta } = Card;
 const WinloadMyTeamApi = () => {
     return (
-        <div>
-            <h1>My Team API</h1>
-            <p>This is the My Team API page.</p>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: "20px", alignItems: 'center', padding: '30px' }}>
+            <MyApiTable></MyApiTable>
+            <MyTeamApiBox></MyTeamApiBox>
         </div>
     )
 }

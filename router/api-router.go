@@ -200,5 +200,11 @@ func SetApiRouter(router *gin.Engine) {
 			winloadTeamRoute.GET("/all_teams", controller.GetTeamsForAdmin)
 		}
 
+		winloadTeamKeyRoute := apiRouter.Group("/winload_team_key")
+		winloadTeamKeyRoute.Use(middleware.UserAuth())
+		{
+			winloadTeamKeyRoute.POST("", controller.CreateTeamKey)
+		}
+
 	}
 }

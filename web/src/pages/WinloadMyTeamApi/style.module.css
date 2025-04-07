@@ -1,0 +1,5 @@
+.my-api-table
+  :global(.semi-table-thead > .semi-table-row > .semi-table-row-head) {
+  border-bottom-width: 1px;
+  font-weight: 300;
+}

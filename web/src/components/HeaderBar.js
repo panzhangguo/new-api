@@ -97,7 +97,7 @@ const dropdownStyle = {
 
 // 自定义主题切换开关样式
 const switchStyle = {
-  margin: '0 8px'
+  margin: '0 8px',
 };
 
 const HeaderBar = () => {
@@ -372,8 +372,8 @@ const HeaderBar = () => {
                 {
                   isThemeBtnShow && <>
                     <Switch
-                      checkedText='🌞'
-                      size={styleState.isMobile ? 'default' : 'large'}
+                      checkedText='☀️' // pfee 修改图标
+                      size={styleState.isMobile ? 'default' : 'middle'}
                       checked={theme === 'dark'}
                       uncheckedText='🌙'
                       style={switchStyle}

@@ -219,12 +219,16 @@ func migrateDB() error {
 	if err != nil {
 		return err
 	}
-
 	err = DB.AutoMigrate(&WinloadUserTeam{})
 	if err != nil {
 		return err
 	}
+	err = DB.AutoMigrate(&WinloadTeamKey{})
+	if err != nil {
+		return err
+	}
 	/* pfee 添加团队表 */
+
 	common.SysLog("database migrated")
 	err = createRootAccountIfNeed()
 	return err

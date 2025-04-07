@@ -1,5 +1,5 @@
 // 隐藏暗黑切换按钮
-export const isThemeBtnShow = false
+export const isThemeBtnShow = true
 
 // 国际化按钮
 export const isLanguageBtnShow = false

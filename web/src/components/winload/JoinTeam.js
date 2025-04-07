@@ -57,7 +57,7 @@ const JoinTeam = () => {
     }, [value]);
 
     const getTeams = async () => {
-        const res = await API.get('/api/winload-team/self_all');
+        const res = await API.get('/api/winload-team/self_all/?containjoining=true');
         const { data, success } = res.data;
         if (success && data.length > 0) {
             setTeams(data);

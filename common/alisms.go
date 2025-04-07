@@ -53,11 +53,10 @@ func SendDySmsCode(phone string, code string) (_err error) {
 	signName := os.Getenv("ALIBABA_DYSMS_SIGNNAME")
 
 	sendSmsRequest := &dysmsapi20170525.SendSmsRequest{
-		PhoneNumbers: tea.String(phone),
-		SignName:     tea.String(signName),
-		TemplateCode: tea.String(templateCode),
-		// TemplateParam: tea.String("{\"code\":\"" + code + "\"}"),
-		TemplateParam: tea.String("{\"code\":\"1234\"}"),
+		PhoneNumbers:  tea.String(phone),
+		SignName:      tea.String(signName),
+		TemplateCode:  tea.String(templateCode),
+		TemplateParam: tea.String("{\"code\":\"" + code + "\"}"),
 	}
 	runtime := &util.RuntimeOptions{}
 	tryErr := func() (_e error) {

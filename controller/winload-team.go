@@ -96,7 +96,8 @@ func UploadTeamAvatar(c *gin.Context) {
 }
 
 func GetSelfTeams(c *gin.Context) {
-	teams, err := model.GetTeamsByUserId(c.GetInt("id"))
+	containjoining := c.Query("containjoining") == "true"
+	teams, err := model.GetTeamsByUserId(c.GetInt("id"), containjoining)
 
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
