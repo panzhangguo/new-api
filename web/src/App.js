@@ -25,12 +25,13 @@ import Task from "./pages/Task/index.js";
 import Playground from './pages/Playground/Playground.js';
 import OAuth2Callback from "./components/OAuth2Callback.js";
 import PersonalSetting from './components/PersonalSetting.js';
-import TeamManage from './pages/TeamManage/index.js';
 import Console from './pages/Console/index.js';
 import OperationBackground from './pages/OperationBackground/index.js';
-import Account from './pages/Account/index.js';
-import MyTeam from './pages/MyTeam/index.js';
+import WinloadTeamManage from './pages/WinloadTeamManage/index.js';
+import WinloadAccount from './pages/WinloadAccount/index.js';
+import WinloadMyTeam from './pages/WinloadMyTeam/index.js';
 import AddTeam from './components/winload/AddTeam.js';
+import WinloadMyTeamApi from './pages/WinloadMyTeamApi/index.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -290,14 +291,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <TeamManage />
+                  <WinloadTeamManage />
                 </Suspense>
               </PrivateRoute>
             }
           />
         </Route>
         {/* pfee 添加账号管理路由 个人信息由控制台迁移到个账号人中心 */}
-        <Route path='/account' element={<Account />} >
+        <Route path='/account' element={<WinloadAccount />} >
           <Route
             path='/account/personal'
             element={
@@ -323,7 +324,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <MyTeam />
+                  <WinloadMyTeam />
                 </Suspense>
               </PrivateRoute>
             }
@@ -334,6 +335,16 @@ function App() {
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                   <AddTeam />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/account/my-team-api'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <WinloadMyTeamApi />
                 </Suspense>
               </PrivateRoute>
             }

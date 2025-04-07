@@ -68,7 +68,8 @@ const groupLabelStyle = {
 const routerMap = {
   topup: '/account/topup',
   personal: '/account/personal',
-  "my-team": '/account/my-team'
+  "my-team": '/account/my-team',
+  'my-team-api': '/account/my-team-api',
 };
 
 const AccountSiderBar = () => {
@@ -107,6 +108,12 @@ const AccountSiderBar = () => {
         to: '/account/my-team',
         icon: <IconUserGroup />,
       },
+      {
+        text: t('团队密钥'),
+        itemKey: 'my-team-api',
+        to: '/account/my-team-api',
+        icon: <IconKey />,
+      },
     ],
     [t],
   );
@@ -114,7 +121,7 @@ const AccountSiderBar = () => {
   // 使用useMemo一次性计算所有图标样式
   const iconStyles = useMemo(() => {
     const styles = {};
-    ['personal', 'topup', 'my-team'].forEach(key => {
+    ['personal', 'topup', 'my-team', 'my-team-api'].forEach(key => {
       styles[key] = iconStyle(key, selectedKeys);
     });
     return styles;
