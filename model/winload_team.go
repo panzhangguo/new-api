@@ -29,8 +29,9 @@ type WinloadUserTeam struct {
 	TeamId              int         `json:"team_id" gorm:"index:idx_user_id_team_id primaryKey"`
 	IsOwner             bool        `json:"is_owner" gorm:"type:boolean;"`
 	Status              int         `json:"status" gorm:"type:int;"`                    // 人员的状态 User2TeamStatus
-	Editable            bool        `json:"editable" gorm:"type:boolean;"`              // 人员是否有编辑权限
+	Editable            bool        `json:"editable" gorm:"type:boolean;"`              // 人员是否有编辑团队信息权限
 	JoiningApprovalAble bool        `json:"joining_approval_able" gorm:"type:boolean;"` // 人员是否有审批人员加入权限
+	ClearTeamuserAble   bool        `json:"clear_teamuser_able" gorm:"type:boolean;"`   // 人员是否有清除团队成员权限
 	InAuthorizedGroup   bool        `json:"in_authorized_group" gorm:"type:boolean;"`   // 是否在权限组
 	Team                WinloadTeam `json:"team" gorm:"references:Id;foreignKey:TeamId;"`
 	CreatedAt           time.Time   `json:"created_at"`
@@ -271,7 +272,7 @@ func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num i
 	query := tx.Unscoped().Model(&WinloadUserTeam{})
 
 	likeKeyword := "%" + keyword + "%"
-	query.Select("users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
 		Joins("left join users on winload_user_teams.user_id = users.id")
 	query = query.Where("users.username LIKE ? OR users.email LIKE ? OR users.display_name LIKE ?", likeKeyword, likeKeyword, likeKeyword)
 
@@ -290,7 +291,7 @@ func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num i
 
 	// 获取分页数据
 	err = query.Omit("password").
-		Order("winload_user_teams.updated_at desc").
+		Order("winload_user_teams.created_at desc").
 		Limit(num).
 		Offset(startIdx).
 		Scan(&teamUsers).Error
@@ -307,14 +308,13 @@ func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num i
 	return teamUsers, total, nil
 }
 
+// 查询团队所有成员
 func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) {
 	// var users []*User
 	var teamUsers []*dto.WinloadTeamUser
 	var total int64
 	var err error
 
-	// 开始事务
-	// 开始事务
 	tx := DB.Begin()
 	if tx.Error != nil {
 		return nil, 0, tx.Error
@@ -328,7 +328,7 @@ func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) 
 	// 构建基础查询
 	query := tx.Unscoped().Model(&WinloadUserTeam{})
 
-	query.Select("users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able,winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able, winload_user_teams.clear_teamuser_able, winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
 		Joins("left join users on winload_user_teams.user_id = users.id")
 
 	query = query.Where("winload_user_teams.team_id = (?)", teamId)
@@ -340,7 +340,7 @@ func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) 
 		return nil, 0, err
 	}
 
-	err = query.Order("winload_user_teams.updated_at desc").Scan(&teamUsers).Error
+	err = query.Order("winload_user_teams.created_at desc").Scan(&teamUsers).Error
 	if err != nil {
 		tx.Rollback()
 		return nil, 0, err
@@ -392,4 +392,118 @@ func GetTeamsForAdmin() ([]*dto.WinloadTeamForAdmin, int64, error) {
 		return nil, 0, err
 	}
 	return teams, total, err
+}
+
+func UpdateUser2TeamInAuthorizedGroup(user2teamGroup []*dto.WinloadTeamUser, inAuthGroup bool) error {
+	var user2Teams []WinloadUserTeam
+	var err error
+
+	tx := DB.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	query := tx.Unscoped().Model(&WinloadUserTeam{})
+
+	for i, user2team := range user2teamGroup {
+		if i == 0 {
+			query = query.Where(&dto.WinloadTeamUser{UserId: user2team.UserId, TeamId: user2team.TeamId})
+		} else {
+			query = query.Or(&dto.WinloadTeamUser{UserId: user2team.UserId, TeamId: user2team.TeamId})
+		}
+	}
+
+	err = query.Find(&user2Teams).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	updateFields := map[string]interface{}{
+		"in_authorized_group": inAuthGroup,
+	}
+
+	// 更新用户-团队-权限组关系
+	err = query.Updates(updateFields).Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+// 查询团队权限组成员
+func GetTeamAuthorizedGroupUsers(teamId int) ([]*dto.WinloadTeamUser, error) {
+	// var users []*User
+	var teamUsers []*dto.WinloadTeamUser
+	var err error
+
+	tx := DB.Begin()
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	query := tx.Unscoped().Model(&WinloadUserTeam{})
+	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able, winload_user_teams.clear_teamuser_able, winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+		Joins("left join users on winload_user_teams.user_id = users.id")
+	query = query.Where("winload_user_teams.team_id = (?) AND winload_user_teams.in_authorized_group = ?", teamId, true)
+
+	err = query.Order("winload_user_teams.created_at desc").Scan(&teamUsers).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	// 提交事务
+	if err = tx.Commit().Error; err != nil {
+		return nil, err
+	}
+
+	return teamUsers, nil
+}
+
+func (user2team *WinloadUserTeam) UpdateUser2TeamAuth(id int) error {
+	// false值不更新，转为map
+	updates := map[string]interface{}{
+		"editable":              user2team.Editable,
+		"joining_approval_able": user2team.JoiningApprovalAble,
+		"in_authorized_group":   user2team.InAuthorizedGroup,
+		"clear_teamuser_able":   user2team.ClearTeamuserAble,
+	}
+	err := DB.Model(&WinloadUserTeam{}).Where("id = ?", id).Updates(updates).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (user2team *WinloadUserTeam) UpdateUser2TeamStatus(id int) error {
+	if user2team.Status == common.User2TeamStatus["member"] {
+		updates := map[string]interface{}{
+			"status": user2team.Status,
+		}
+		err := DB.Model(&WinloadUserTeam{}).Where("id = ? AND user_id = ? AND  team_id = ?", id, user2team.UserId, user2team.TeamId).Updates(updates).Error
+		if err != nil {
+			return err
+		}
+	}
+
+	if user2team.Status == common.User2TeamStatus["cleared"] {
+		// 清除用户
+		err := DB.Where("id = ? AND user_id = ? AND  team_id = ?", id, user2team.UserId, user2team.TeamId).Delete(&WinloadUserTeam{}).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

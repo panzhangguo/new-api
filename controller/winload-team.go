@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"one-api/common"
+	"one-api/dto"
 	"one-api/model"
 	"os"
 	"path/filepath"
@@ -53,7 +54,7 @@ func CreateTeam(c *gin.Context) {
 
 func UploadTeamAvatar(c *gin.Context) {
 	var userId = c.GetInt("id")
-	path, err := common.Mkdir(fmt.Sprintf("/upload/%d/avatar", userId))
+	path, err := common.Mkdir(fmt.Sprintf("/upload/%d/team/avatar", userId))
 
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
@@ -320,5 +321,149 @@ func GetTeamsForAdmin(c *gin.Context) {
 			"items": teams,
 			"total": total,
 		},
+	})
+}
+
+// 更新用户-团队权限
+func UpdateUser2TeamAuth(c *gin.Context) {
+	var user2team *dto.WinloadTeamUser
+	err := json.NewDecoder(c.Request.Body).Decode(&user2team)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的参数",
+		})
+		return
+	}
+
+	// 判断用户是否有赋予权限的权限
+	handlerUser2steam, _ := model.GetUser2TeamByUserId(c.GetInt("id"), user2team.TeamId)
+	if !handlerUser2steam.IsOwner {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "您没有赋予权限的权限",
+		})
+		return
+	}
+
+	cleanUser2team := model.WinloadUserTeam{
+		JoiningApprovalAble: user2team.JoiningApprovalAble,
+		Editable:            user2team.Editable,
+		InAuthorizedGroup:   user2team.InAuthorizedGroup,
+		ClearTeamuserAble:   user2team.ClearTeamuserAble,
+	}
+	err = cleanUser2team.UpdateUser2TeamAuth(user2team.Id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "用户权限更新成功",
+	})
+}
+
+// 更新用户-团队-状态
+func UpdateUser2TeamStatus(c *gin.Context) {
+	// 如果status为-1 则表示删除用户
+	var user2team *dto.WinloadTeamUser
+	err := json.NewDecoder(c.Request.Body).Decode(&user2team)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的参数",
+		})
+		return
+	}
+
+	// 判断用户是否有赋予权限的权限
+	handlerUser2steam, _ := model.GetUser2TeamByUserId(c.GetInt("id"), user2team.TeamId)
+	if user2team.Status == common.User2TeamStatus["member"] && !handlerUser2steam.JoiningApprovalAble {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "您没有赋予权限的权限",
+		})
+		return
+	}
+
+	if user2team.Status == common.User2TeamStatus["cleared"] && !handlerUser2steam.ClearTeamuserAble {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "您没有赋予权限的权限",
+		})
+		return
+	}
+
+	memberUser2team := model.WinloadUserTeam{
+		Status: user2team.Status,
+		UserId: user2team.UserId,
+		TeamId: user2team.TeamId,
+	}
+	err = memberUser2team.UpdateUser2TeamStatus(user2team.Id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "用户信息更新成功",
+	})
+}
+
+// 更新用户-团队-权限组
+func UpdateUser2TeamInAuthorizedGroup(c *gin.Context) {
+	inAuthorizedGroup, _ := strconv.Atoi(c.Param("in_authorized_group"))
+	var user2teams []*dto.WinloadTeamUser
+	err := json.NewDecoder(c.Request.Body).Decode(&user2teams)
+
+	if (inAuthorizedGroup != 0 && inAuthorizedGroup != 1) || err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的参数",
+		})
+		return
+	}
+
+	err = model.UpdateUser2TeamInAuthorizedGroup(user2teams, inAuthorizedGroup == 1)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "用户组权限更新成功",
+	})
+}
+
+func GetTeamAuthorizedGroupUsers(c *gin.Context) {
+	teamId, err := strconv.Atoi(c.Param("team_id"))
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的参数",
+		})
+		return
+	}
+	users, err := model.GetTeamAuthorizedGroupUsers(teamId)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"success": true,
+		"message": "",
+		"data":    users,
 	})
 }

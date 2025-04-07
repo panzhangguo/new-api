@@ -69,8 +69,9 @@ const SelfTeam = (props) => {
     const MemberTableRef = useRef();
     const AuthTableRef = useRef();
     const [codeSpinning, setCodeSpinning] = useState(false);
-    const [activeKey, setActiveKey] = useState('2');
+    const [activeKey, setActiveKey] = useState('1');
     const flag = useRef(true);
+    const authflag = useRef(true);
 
     // const [isOwner] = useState(props.teams[0]['is_owner']);
     const searchMember = () => {
@@ -191,6 +192,12 @@ const SelfTeam = (props) => {
         setTeamInfo(createDescription(selectedTeam.team));
         searchMember();
     }, [selectedTeam, userStatus]);
+
+    useEffect(() => {
+        if (activeKey === '2') {
+            AuthTableRef.current.loadAuthUsers();
+        }
+    }, [activeKey]);
 
     const editSuccess = async () => {
         const res = await props.getTeams();
@@ -321,6 +328,7 @@ const SelfTeam = (props) => {
                                 searchKey={searchKey}
                                 userStatus={userStatus}
                                 teamId={selectedTeam.team_id}
+                                user2team={selectedTeam}
                                 ref={MemberTableRef}
                             ></MemberTable>
                         </TabPane>

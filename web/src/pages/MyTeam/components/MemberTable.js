@@ -1,5 +1,11 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState, useRef } from 'react';
-import { Table, Avatar, Tag } from '@douyinfe/semi-ui';
+import React, {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useState,
+    useRef,
+} from 'react';
+import { Button, Table, Avatar, Tag, Dropdown } from '@douyinfe/semi-ui';
 import {
     IconMore,
     IconTickCircle,
@@ -7,6 +13,12 @@ import {
     IconClear,
     IconAlarm,
     IconUser,
+    IconBox,
+    IconSetting,
+    IconForward,
+    IconRefresh,
+    IconSearch,
+    IconAlertCircle,
 } from '@douyinfe/semi-icons';
 import { ITEMS_PER_PAGE } from '../../../constants';
 import { useTranslation } from 'react-i18next';
@@ -27,6 +39,26 @@ const MemberTable = (props, ref) => {
     useImperativeHandle(ref, () => ({
         reload,
     }));
+
+    const authHandler = async (record, key) => {
+        const url = '/api/winload-team/update_user2team_status';
+        let status = 0;
+        if (key === 'joining_approval_able') {
+            status = 2
+        }
+
+        if (key === 'clear_teamuser_able') {
+            status = -1
+        }
+        const res = await API.post(url, { ...record, status: status }); // cleared
+        const { success, message } = res.data;
+        if (success) {
+            reload();
+        } else {
+            showError(message);
+        }
+        return
+    };
     const columns = [
         {
             title: '用户名',
@@ -38,7 +70,11 @@ const MemberTable = (props, ref) => {
             render: (text, record, index) => {
                 return (
                     <div>
-                        <Avatar size="small" color={record.avatarBg} style={{ marginRight: 4 }}>
+                        <Avatar
+                            size='small'
+                            color={record.avatarBg}
+                            style={{ marginRight: 4 }}
+                        >
                             {typeof text === 'string' && text.slice(0, 1)}
                         </Avatar>
                         {text}
@@ -62,7 +98,7 @@ const MemberTable = (props, ref) => {
                 const tagProps = tagConfig[text];
                 return (
                     <Tag shape='circle' {...tagProps} style={{ userSelect: 'text' }}>
-                        {tagProps ? tagProps.text : "未知"}
+                        {tagProps ? tagProps.text : '未知'}
                     </Tag>
                 );
             },
@@ -71,23 +107,46 @@ const MemberTable = (props, ref) => {
             title: '加入/更新日期',
             dataIndex: 'updated_at',
             render: (text) => {
-                return (
-                    <span>{new Date(text).toLocaleString()}</span>
-                );
+                return <span>{new Date(text).toLocaleString()}</span>;
             },
         },
         {
             title: '操作',
             dataIndex: 'default_operate',
-            render: () => {
-                return <IconMore />;
+            render: (text, record) => {
+                return (
+                    <>
+                        {props.user2team.in_authorized_group && (
+                            <Dropdown
+                                position='bottomLeft'
+                                render={
+                                    <Dropdown.Menu>
+                                        {props.user2team.joining_approval_able && (
+                                            <Dropdown.Item onClick={() => { authHandler(record, 'joining_approval_able') }} icon={<IconAlarm />}>通过</Dropdown.Item>
+                                        )}
+                                        {props.user2team.clear_teamuser_able && (
+                                            <>
+                                                <Dropdown.Divider />
+                                                <Dropdown.Item onClick={() => { authHandler(record, 'clear_teamuser_able') }} type='danger' icon={<IconAlertCircle />}>
+                                                    清退
+                                                </Dropdown.Item>
+                                            </>
+                                        )}
+                                    </Dropdown.Menu>
+                                }
+                            >
+                                <IconMore />
+                            </Dropdown>
+                        )}
+                    </>
+                );
             },
         },
     ];
 
     const loadTeamUsers = async (startIdx, pageSize) => {
         setLoading(true);
-        const url = `/api/winload-team/team_users/?keyword=${props.searchKey}&team_id=${props.teamId}&p=${startIdx}&page_size=${pageSize}&status=${props.userStatus}`
+        const url = `/api/winload-team/team_users/?keyword=${props.searchKey}&team_id=${props.teamId}&p=${startIdx}&page_size=${pageSize}&status=${props.userStatus}`;
         const res = await API.get(url).finally(() => {
             setLoading(false);
         });
