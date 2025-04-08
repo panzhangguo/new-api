@@ -204,6 +204,8 @@ func SetApiRouter(router *gin.Engine) {
 		winloadTeamKeyRoute.Use(middleware.UserAuth())
 		{
 			winloadTeamKeyRoute.POST("", controller.CreateTeamKey)
+			winloadTeamKeyRoute.GET("/self_useful", controller.GetMyUsefulTeamKeys)
+			winloadTeamKeyRoute.DELETE("/:id", controller.DeleteTeamKeyById)
 		}
 
 	}

@@ -6,50 +6,8 @@ import style from './style.module.css'
 import { API, showError, showSuccess, showWarning, timestamp2string } from "../../helpers";
 import { useEffect, useRef, useState } from "react";
 import { renderGroup, renderQuota } from "../../helpers/render";
-import { t } from "i18next";
+import { renderStatus } from "./utils";
 const MyApiTable = () => {
-    const renderStatus = (status, model_limits_enabled = false) => {
-        switch (status) {
-            case 1:
-                if (model_limits_enabled) {
-                    return (
-                        <Tag color='green' size='large'>
-                            已启用：限制模型
-                        </Tag>
-                    );
-                } else {
-                    return (
-                        <Tag color='green' size='large'>
-                            已启用
-                        </Tag>
-                    );
-                }
-            case 2:
-                return (
-                    <Tag color='red' size='large'>
-                        已禁用
-                    </Tag>
-                );
-            case 3:
-                return (
-                    <Tag color='yellow' size='large'>
-                        已过期
-                    </Tag>
-                );
-            case 4:
-                return (
-                    <Tag color='grey' size='large'>
-                        已耗尽
-                    </Tag>
-                );
-            default:
-                return (
-                    <Tag color='black' size='large'>
-                        未知状态
-                    </Tag>
-                );
-        }
-    };
     const columns = [
         {
             title: '名称',
@@ -188,6 +146,7 @@ const MyApiTable = () => {
         const { success, message } = res.data;
         if (success) {
             showSuccess('加入成功');
+            setTeamVisible(false);
         } else {
             showError(message);
         }

@@ -3,3 +3,9 @@
   border-bottom-width: 1px;
   font-weight: 300;
 }
+
+.my-teamapi-box :global(.semi-typography-paragraph) {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
