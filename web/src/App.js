@@ -274,17 +274,6 @@ function App() {
             </Suspense>
           }
         />
-        {/* pfee 添加组织管理路由 */}
-        <Route
-          path='/company'
-          element={
-            <PrivateRoute>
-              <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                <Tenant />
-              </Suspense>
-            </PrivateRoute>
-          }
-        />
         {/* 方便使用chat2link直接跳转聊天... */}
         <Route
           path='/chat2link'
