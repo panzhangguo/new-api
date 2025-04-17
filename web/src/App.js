@@ -21,17 +21,11 @@ import Chat2Link from './pages/Chat2Link';
 import { Layout } from '@douyinfe/semi-ui';
 import Midjourney from './pages/Midjourney';
 import Pricing from './pages/Pricing/index.js';
-import Task from "./pages/Task/index.js";
+import Task from './pages/Task/index.js';
 import Playground from './pages/Playground/Playground.js';
-import OAuth2Callback from "./components/OAuth2Callback.js";
+import OAuth2Callback from './components/OAuth2Callback.js';
 import PersonalSetting from './components/PersonalSetting.js';
-import Console from './pages/Console/index.js';
-import OperationBackground from './pages/OperationBackground/index.js';
-import WinloadTeamManage from './pages/WinloadTeamManage/index.js';
-import WinloadAccount from './pages/WinloadAccount/index.js';
-import WinloadMyTeam from './pages/WinloadMyTeam/index.js';
-import AddTeam from './components/winload/AddTeam.js';
-import WinloadMyTeamApi from './pages/WinloadMyTeamApi/index.js';
+import Tenant from './pages/Tenant/index.js';
 
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -41,7 +35,7 @@ function App() {
   const location = useLocation();
 
   return (
-    <>
+    <SetupCheck>
       <Routes>
         <Route
           path='/'
@@ -51,7 +45,6 @@ function App() {
             </Suspense>
           }
         />
-        {/* pfee 添加控制器父路由 */}
         <Route
           path='/console'
           element={
@@ -250,6 +243,14 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route
+          path='/setup'
+          element={
+            <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+              <Setup />
+            </Suspense>
+          }
+        />
         {/* pfee 添加系统管理 */}
         <Route path='/operation-background' element={<OperationBackground />} >
           {/* 原用户管理迁移至系统管理 */}
@@ -352,7 +353,7 @@ function App() {
         </Route>
         <Route path='*' element={<NotFound />} />
       </Routes>
-    </>
+    </SetupCheck>
   );
 }
 
