@@ -96,7 +96,7 @@ const MyTeamApiBox = () => {
             <div style={{ display: 'flex', gap: '10px', marginTop: '10px', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
                 <div></div>
 
-                <div>
+                <div style={{ display: 'flex', gap: '10px' }}>
                     <Tag color='cyan' type={searchStatus.includes('unlimited_quota') ? 'solid' : 'ghost'} onClick={() => handlerSearchStatus('unlimited_quota')} prefixIcon={<IconBolt />} size="large" shape='circle'>无限额度</Tag>
                     <Tag color='cyan' type={searchStatus.includes('status_3') ? 'solid' : 'ghost'} onClick={() => handlerSearchStatus('status_3')} prefixIcon={<IconLikeHeart />} size="large" shape='circle'>过期</Tag>
                     <Tag color='cyan' type={searchStatus.includes('expired_time') ? 'solid' : 'ghost'} onClick={() => handlerSearchStatus('expired_time')} prefixIcon={<IconAlarm />} size="large" shape='circle'>无限期</Tag>
@@ -117,7 +117,7 @@ const MyTeamApiBox = () => {
                                 backgroundColor: 'var(--semi-color-bg-2)', border: '1px solid var(--semi-color-border)',
                                 borderRadius: '8px', padding: "12px"
                             }}>
-                                <div style={{ display: 'flex', gap: '10px' }}>
+                                <div style={{ display: 'flex', gap: '10px', paddingTop: '10px', marginBottom: '10px' }}>
                                     <Avatar
                                         src={SERVER_ATTACHMENT_URL + teamKey.team.avatar}
                                         size="default"
@@ -131,12 +131,16 @@ const MyTeamApiBox = () => {
                                     </div>
                                 </div>
 
-                                <List
-                                    dataSource={teamKey.keys}
-                                    renderItem={key => (
-                                        <List.Item style={listItemStyle}>
-                                            <div style={{ display: 'flex', flexDirection: "column", gap: '10px' }}>
-                                                <div style={{ border: "1px solid var(--semi-color-border)", padding: '14px', borderRadius: '8px' }}>
+                                <div style={{ border: '1px solid var(--semi-color-border)', padding: '10px', borderRadius: '8px' }}>
+                                    <List
+                                        grid={{
+                                            gutter: 12,
+                                            span: 8,
+                                        }}
+                                        dataSource={teamKey.keys}
+                                        renderItem={key => (
+                                            <List.Item style={listItemStyle}>
+                                                <div style={{ padding: '14px', borderRadius: '8px', width: '100%' }}>
                                                     <Paragraph key={key.id} copyable={{
                                                         content: key.key_api,
                                                         render: (copied, doCopy, config) => {
@@ -171,10 +175,11 @@ const MyTeamApiBox = () => {
                                                         </Popconfirm>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </List.Item>
-                                    )}
-                                />
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+
                             </div>
                         )
                     })

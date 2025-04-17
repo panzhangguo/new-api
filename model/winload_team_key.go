@@ -55,7 +55,7 @@ func GetTeamKeyInTeamIds(teamIds []int) ([]*dto.WinloadTeamKeysDto, error) {
 	query = query.Joins("LEFT JOIN tokens ON winload_team_keys.key_id = tokens.id").
 		Where("tokens.deleted_at IS NULL")
 
-	query = query.Select("winload_team_keys.id, winload_team_keys.key_api, winload_team_keys.team_id, winload_team_keys.team_owner_id, winload_team_keys.created_at, tokens.name, tokens.group, tokens.used_quota, tokens.remain_quota, tokens.unlimited_quota, tokens.status, tokens.expired_time")
+	query = query.Select("winload_team_keys.id, winload_team_keys.key_api, winload_team_keys.team_id, winload_team_keys.team_owner_id, winload_team_keys.created_at,tokens.user_id, tokens.name, tokens.group, tokens.used_quota, tokens.remain_quota, tokens.unlimited_quota, tokens.status, tokens.expired_time")
 
 	err := query.Scan(&teamKeys).Error
 	if err != nil {

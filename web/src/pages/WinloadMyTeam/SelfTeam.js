@@ -64,7 +64,7 @@ const SelfTeam = (props) => {
     // const { teams } = props;
     // 默认为自己的团队
     const defaultTeam = props.teams.find(team => team.is_owner);
-    const [selectedTeam, setSelectedTeam] = useState(defaultTeam);
+    const [selectedTeam, setSelectedTeam] = useState(defaultTeam ?? props.teams[0]);
     const [teamInfo, setTeamInfo] = useState(teamDefaultInfo);
     const [searchKey, setSearchKey] = useState('');
     const [userStatus, setUserStatus] = useState(0);
@@ -234,7 +234,7 @@ const SelfTeam = (props) => {
                         {/* <IconUserGroup size='large'></IconUserGroup> */}
                         <Avatar
                             size='small'
-                            src={SERVER_ATTACHMENT_URL + selectedTeam.team?.avatar}
+                            src={SERVER_ATTACHMENT_URL + selectedTeam?.team?.avatar}
                         ></Avatar>
                     </div>
                     <div
