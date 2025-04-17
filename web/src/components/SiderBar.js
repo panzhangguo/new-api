@@ -15,10 +15,13 @@ import {
 import '../index.css';
 
 import {
-  IconCalendarClock, IconChecklistStroked,
-  IconComment, IconCommentStroked,
+  IconCalendarClock,
+  IconChecklistStroked,
+  IconComment,
+  IconCommentStroked,
   IconCreditCard,
-  IconGift, IconHelpCircle,
+  IconGift,
+  IconHelpCircle,
   IconHistogram,
   IconHome,
   IconImage,
@@ -27,9 +30,15 @@ import {
   IconPriceTag,
   IconSetting,
   IconUser,
-  IconUserGroup
 } from '@douyinfe/semi-icons';
-import { Avatar, Dropdown, Layout, Nav, Switch, Divider } from '@douyinfe/semi-ui';
+import {
+  Avatar,
+  Dropdown,
+  Layout,
+  Nav,
+  Switch,
+  Divider,
+} from '@douyinfe/semi-ui';
 import { setStatusData } from '../helpers/data.js';
 import { stringToColor } from '../helpers/render.js';
 import { useSetTheme, useTheme } from '../context/Theme/index.js';
@@ -45,21 +54,23 @@ const navItemStyle = {
 // 自定义侧边栏按钮悬停样式
 const navItemHoverStyle = {
   backgroundColor: 'var(--semi-color-primary-light-default)',
-  color: 'var(--semi-color-primary)'
+  color: 'var(--semi-color-primary)',
 };
 
 // 自定义侧边栏按钮选中样式
 const navItemSelectedStyle = {
   backgroundColor: 'var(--semi-color-primary-light-default)',
   color: 'var(--semi-color-primary)',
-  fontWeight: '600'
+  fontWeight: '600',
 };
 
 // 自定义图标样式
 const iconStyle = (itemKey, selectedKeys) => {
   return {
     fontSize: '18px',
-    color: selectedKeys.includes(itemKey) ? 'var(--semi-color-primary)' : 'var(--semi-color-text-2)',
+    color: selectedKeys.includes(itemKey)
+      ? 'var(--semi-color-primary)'
+      : 'var(--semi-color-text-2)',
   };
 };
 
@@ -80,7 +91,6 @@ const routerMap = {
   task: '/task',
   playground: '/playground',
   personal: '/personal',
-  company: '/company'
 };
 
 const SiderBar = () => {
@@ -101,8 +111,24 @@ const SiderBar = () => {
 
   // 预先计算所有可能的图标样式
   const allItemKeys = useMemo(() => {
-    const keys = ['home', 'channel', 'token', 'redemption', 'topup', 'user', 'log', 'midjourney',
-      'setting', 'about', 'chat', 'detail', 'pricing', 'task', 'playground', 'personal'];
+    const keys = [
+      'home',
+      'channel',
+      'token',
+      'redemption',
+      'topup',
+      'user',
+      'log',
+      'midjourney',
+      'setting',
+      'about',
+      'chat',
+      'detail',
+      'pricing',
+      'task',
+      'playground',
+      'personal',
+    ];
     // 添加聊天项的keys
     for (let i = 0; i < chatItems.length; i++) {
       keys.push('chat' + i);
@@ -113,7 +139,7 @@ const SiderBar = () => {
   // 使用useMemo一次性计算所有图标样式
   const iconStyles = useMemo(() => {
     const styles = {};
-    allItemKeys.forEach(key => {
+    allItemKeys.forEach((key) => {
       styles[key] = iconStyle(key, selectedKeys);
     });
     return styles;
@@ -159,10 +185,8 @@ const SiderBar = () => {
         to: '/task',
         icon: <IconChecklistStroked />,
         className:
-          localStorage.getItem('enable_task') === 'true'
-            ? ''
-            : 'tableHiddle',
-      }
+          localStorage.getItem('enable_task') === 'true' ? '' : 'tableHiddle',
+      },
     ],
     [
       localStorage.getItem('enable_data_export'),
@@ -213,12 +237,6 @@ const SiderBar = () => {
         icon: <IconUser />,
       },
       {
-        text: t('组织管理'),
-        itemKey: 'company',
-        to: '/company',
-        icon: <IconUserGroup />,
-      },
-      {
         text: t('系统设置'),
         itemKey: 'setting',
         to: '/setting',
@@ -231,19 +249,17 @@ const SiderBar = () => {
   const chatMenuItems = useMemo(
     () => [
       {
-        // pfee 重命名
-        text: '试验场',
+        text: 'Playground',
         itemKey: 'playground',
         to: '/playground',
         icon: <IconCommentStroked />,
       },
-      // pfee 隐藏聊天功能
-      // {
-      //   text: t('聊天'),
-      //   itemKey: 'chat',
-      //   items: chatItems,
-      //   icon: <IconComment />,
-      // },
+      {
+        text: t('聊天'),
+        itemKey: 'chat',
+        items: chatItems,
+        icon: <IconComment />,
+      },
     ],
     [chatItems, t],
   );
@@ -286,7 +302,7 @@ const SiderBar = () => {
         }
       } catch (e) {
         console.error(e);
-        showError('聊天数据解析失败')
+        showError('聊天数据解析失败');
       }
     }
   }, []);
@@ -294,7 +310,9 @@ const SiderBar = () => {
   // Update the useEffect for route selection
   useEffect(() => {
     const currentPath = location.pathname;
-    let matchingKey = Object.keys(routerMapState).find(key => routerMapState[key] === currentPath);
+    let matchingKey = Object.keys(routerMapState).find(
+      (key) => routerMapState[key] === currentPath,
+    );
 
     // Handle chat routes
     if (!matchingKey && currentPath.startsWith('/chat/')) {
@@ -335,9 +353,9 @@ const SiderBar = () => {
   return (
     <>
       <Nav
-        className="custom-sidebar-nav"
+        className='custom-sidebar-nav'
         style={{
-          width: isCollapsed ? '60px' : '256px', // pfee 宽度更改
+          width: isCollapsed ? '60px' : '200px',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
           borderRight: '1px solid var(--semi-color-border)',
           background: 'var(--semi-color-bg-1)',
@@ -361,7 +379,9 @@ const SiderBar = () => {
           // 确保在收起侧边栏时有选中的项目，避免不必要的计算
           if (selectedKeys.length === 0) {
             const currentPath = location.pathname;
-            const matchingKey = Object.keys(routerMapState).find(key => routerMapState[key] === currentPath);
+            const matchingKey = Object.keys(routerMapState).find(
+              (key) => routerMapState[key] === currentPath,
+            );
 
             if (matchingKey) {
               setSelectedKeys([matchingKey]);
@@ -395,7 +415,7 @@ const SiderBar = () => {
 
           // 如果点击的是已经展开的子菜单的父项，则收起子菜单
           if (openedKeys.includes(key.itemKey)) {
-            setOpenedKeys(openedKeys.filter(k => k !== key.itemKey));
+            setOpenedKeys(openedKeys.filter((k) => k !== key.itemKey));
           }
 
           setSelectedKeys([key.itemKey]);
@@ -413,7 +433,9 @@ const SiderBar = () => {
                 key={item.itemKey}
                 itemKey={item.itemKey}
                 text={item.text}
-                icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+                icon={React.cloneElement(item.icon, {
+                  style: iconStyles[item.itemKey],
+                })}
               >
                 {item.items.map((subItem) => (
                   <Nav.Item
@@ -430,7 +452,9 @@ const SiderBar = () => {
                 key={item.itemKey}
                 itemKey={item.itemKey}
                 text={item.text}
-                icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+                icon={React.cloneElement(item.icon, {
+                  style: iconStyles[item.itemKey],
+                })}
               />
             );
           }
@@ -446,7 +470,9 @@ const SiderBar = () => {
             key={item.itemKey}
             itemKey={item.itemKey}
             text={item.text}
-            icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+            icon={React.cloneElement(item.icon, {
+              style: iconStyles[item.itemKey],
+            })}
             className={item.className}
           />
         ))}
@@ -463,7 +489,9 @@ const SiderBar = () => {
                 key={item.itemKey}
                 itemKey={item.itemKey}
                 text={item.text}
-                icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+                icon={React.cloneElement(item.icon, {
+                  style: iconStyles[item.itemKey],
+                })}
                 className={item.className}
               />
             ))}
@@ -480,7 +508,9 @@ const SiderBar = () => {
             key={item.itemKey}
             itemKey={item.itemKey}
             text={item.text}
-            icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+            icon={React.cloneElement(item.icon, {
+              style: iconStyles[item.itemKey],
+            })}
             className={item.className}
           />
         ))}
@@ -492,11 +522,10 @@ const SiderBar = () => {
           collapseButton={true}
           collapseText={(collapsed) => {
             if (collapsed) {
-              return t('展开侧边栏')
+              return t('展开侧边栏');
             }
-            return t('收起侧边栏')
-          }
-          }
+            return t('收起侧边栏');
+          }}
         />
       </Nav>
     </>
