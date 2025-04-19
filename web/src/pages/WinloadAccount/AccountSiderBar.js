@@ -155,7 +155,6 @@ const AccountSiderBar = () => {
           );
         }}
         onSelect={(key) => {
-          styleDispatch({ type: 'SET_INNER_PADDING', payload: true });
           if (openedKeys.includes(key.itemKey)) {
             setOpenedKeys(openedKeys.filter(k => k !== key.itemKey));
           }

@@ -61,7 +61,7 @@ export const StyleProvider = ({ children }) => {
         pathname === '' ||
         pathname === '/' ||
         pathname.includes('/home') ||
-        pathname.includes('/chat')
+        pathname.includes('/chat') || pathname.includes('/pricing') || pathname.includes('/account') || pathname.includes('/operation-background') // pfee 隐藏默认侧边栏的路由
       ) {
         dispatch({ type: 'SET_SIDER', payload: false });
         dispatch({ type: 'SET_INNER_PADDING', payload: false });

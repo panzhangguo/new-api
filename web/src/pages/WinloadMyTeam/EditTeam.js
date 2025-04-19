@@ -55,6 +55,7 @@ const EditTeam = (props) => {
             },
         ],
     };
+    console.log(initValues);
 
     const handleOk = async (formState) => {
         setSpinning(true);

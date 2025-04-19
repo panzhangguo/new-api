@@ -117,7 +117,6 @@ const SiderBar = () => {
           );
         }}
         onSelect={(key) => {
-          styleDispatch({ type: 'SET_INNER_PADDING', payload: true });
           // 如果点击的是已经展开的子菜单的父项，则收起子菜单
           if (openedKeys.includes(key.itemKey)) {
             setOpenedKeys(openedKeys.filter(k => k !== key.itemKey));

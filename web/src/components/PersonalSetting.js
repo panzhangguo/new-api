@@ -539,7 +539,7 @@ const PersonalSetting = () => {
               </Descriptions>
             </Card>
             <Card
-              style={{ marginTop: 10 }}
+              style={{ marginTop: 10, display: 'none' }} // pfee隐藏邀请信息
               footer={
                 <div>
                   <Typography.Text>{t('邀请链接')}</Typography.Text>
@@ -579,7 +579,7 @@ const PersonalSetting = () => {
             </Card>
             <Card style={{ marginTop: 10 }}>
               <Typography.Title heading={6}>{t('个人信息')}</Typography.Title>
-              <div style={{ marginTop: 20 }}>
+              {/* <div style={{ marginTop: 20 }}>
                 <Typography.Text strong>{t('邮箱')}</Typography.Text>
                 <div
                   style={{ display: 'flex', justifyContent: 'space-between' }}
@@ -761,12 +761,12 @@ const PersonalSetting = () => {
                     </Button>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div style={{ marginTop: 10 }}>
                 <Space>
-                  <Button onClick={generateAccessToken}>
+                  {/* <Button onClick={generateAccessToken}>
                     {t('生成系统访问令牌')}
-                  </Button>
+                  </Button> */}
                   <Button
                     onClick={() => {
                       setShowChangePasswordModal(true);
@@ -817,7 +817,7 @@ const PersonalSetting = () => {
                 </Modal>
               </div>
             </Card>
-            <Card style={{ marginTop: 10 }}>
+            <Card style={{ marginTop: 10, display: "none" }}> // pfee隐藏通知设置/价格设置
               <Tabs type="line" defaultActiveKey="notification">
                 <TabPane tab={t('通知设置')} itemKey="notification">
                   <div style={{ marginTop: 20 }}>

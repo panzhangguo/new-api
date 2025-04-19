@@ -10,7 +10,7 @@ const OperationBackground = () => {
     const [styleState, styleDispatch] = useContext(StyleContext);
 
     return (
-        <Layout style={{ height: '100%' }}>
+        <Layout style={{ height: 'calc(100vh - 56px)', padding: "20px" }}>
             <Layout.Sider style={{
                 border: 'none',
                 paddingRight: '0',

@@ -140,7 +140,7 @@ const HeaderBar = () => {
     {
       text: t('控制台'),
       itemKey: 'console',
-      to: '/console/detail', // pfee 修改路径
+      to: '/detail',
       icon: <IconTerminal style={headerIconStyle} />,
     },
     {
@@ -255,7 +255,7 @@ const HeaderBar = () => {
                 login: '/login',
                 register: '/register',
                 pricing: '/pricing',
-                console: '/console/detail', // pfee 修改控制台
+                console: '/detail',
                 home: '/',
                 chat: '/chat',
                 operation_background: '/operation-background/user', // pfee 添加系统管理
@@ -264,7 +264,7 @@ const HeaderBar = () => {
               return (
                 <div
                   onClick={(e) => {
-                    if (props.itemKey === 'home') {
+                    if (['home', 'pricing', 'login', 'register', 'operation_background', 'account'].includes(props.itemKey)) { // pfee添加隐藏默认侧边栏路由
                       styleDispatch({
                         type: 'SET_INNER_PADDING',
                         payload: false,

@@ -64,7 +64,7 @@ const PageLayout = () => {
     }
 
     // 默认显示侧边栏
-    styleDispatch({ type: 'SET_SIDER', payload: true });
+    styleDispatch({ type: 'SET_SIDER', payload: false }); // pfee 默认关闭控制台
   }, [i18n]);
 
   // 获取侧边栏折叠状态
@@ -115,7 +115,6 @@ const PageLayout = () => {
               border: 'none',
               paddingRight: '0',
               height: 'calc(100vh - 56px)',
-              display: 'none' // Pfee隐藏layout侧边栏
             }}
           >
             <SiderBar />

@@ -3,7 +3,9 @@ import ModelPricing from '../../components/ModelPricing.js';
 
 const Pricing = () => (
   <>
-    <ModelPricing />
+    <div style={{ padding: '20px' }}>
+      <ModelPricing />
+    </div>
   </>
 );
 
