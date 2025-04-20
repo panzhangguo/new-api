@@ -11,7 +11,7 @@ import (
 
 var StartTime = time.Now().Unix() // unit: second
 var Version = "v0.0.0"            // this hard coding will be replaced automatically when building, no need to manually change
-var SystemName = "万榕信息"           // pfee 修改系统名称
+var SystemName = "奥晨分享"           // pfee 修改系统名称
 var Footer = ""
 var Logo = ""
 var TopUpLink = ""

@@ -32,7 +32,7 @@ func GenerateSmsCode(length int) string {
 }
 
 func SendSmsCode(c *gin.Context) {
-	phone := c.Query("phone")
+	phone := c.Query("mobile_phone")
 
 	if !isValidMobile(phone) {
 		c.JSON(http.StatusOK, gin.H{

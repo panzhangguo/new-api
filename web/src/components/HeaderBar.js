@@ -431,7 +431,6 @@ const HeaderBar = () => {
                 </>
                 <Dropdown
                   position='bottomRight'
-                  style={{ 'display': isLanguageBtnShow ? 'block' : 'none' }}
                   render={
                     <Dropdown.Menu style={dropdownStyle}>
                       <Dropdown.Item
@@ -451,6 +450,7 @@ const HeaderBar = () => {
                 >
                   <Nav.Item
                     itemKey={'language'}
+                    style={{ 'display': 'none' }} // pfee国际化 隐藏
                     icon={<IconLanguage style={headerIconStyle} />}
                   />
                 </Dropdown>

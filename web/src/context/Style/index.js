@@ -57,11 +57,13 @@ export const StyleProvider = ({ children }) => {
     const updateShowSider = () => {
       // check pathname
       const pathname = window.location.pathname;
+      console.log('hide sidebar', pathname);
+
       if (
         pathname === '' ||
         pathname === '/' ||
         pathname.includes('/home') ||
-        pathname.includes('/chat') || pathname.includes('/pricing') || pathname.includes('/account') || pathname.includes('/operation-background') // pfee 隐藏默认侧边栏的路由
+        ['/chat', '/login', '/reset', '/register', 'pricing', '/account', '/operation-background'].includes(pathname) // pfee 隐藏默认侧边栏的路由
       ) {
         dispatch({ type: 'SET_SIDER', payload: false });
         dispatch({ type: 'SET_INNER_PADDING', payload: false });

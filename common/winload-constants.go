@@ -2,7 +2,7 @@ package common
 
 var TeamPrefix = "tc"
 var TeamCodeLength = 30
-
+var PhoneVerificationEnabled = true
 var User2TeamStatus = map[string]int{
 	"cleared": -1, // 清退
 	"owner":   1,  // 团队所有者

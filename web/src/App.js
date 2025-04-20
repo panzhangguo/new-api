@@ -8,7 +8,7 @@ import LoginForm from './components/LoginForm';
 import NotFound from './pages/NotFound';
 import Setting from './pages/Setting';
 import EditUser from './pages/User/EditUser';
-import PasswordResetForm from './components/PasswordResetForm';
+import PasswordResetForm from './components/acfx/PasswordResetForm.js';
 import PasswordResetConfirm from './components/PasswordResetConfirm';
 import Channel from './pages/Channel';
 import Token from './pages/Token';

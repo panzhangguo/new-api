@@ -169,14 +169,14 @@ func SetApiRouter(router *gin.Engine) {
 			tenantRoute.DELETE("/:id", controller.DeleteUser)
 			tenantRoute.GET("", controller.GetAllUsers)
 		}
-		// pfee 添加租户接口入口
-		winloadSmsRoute := apiRouter.Group("/winload-sms")
+		acfxRoute := apiRouter.Group("/acfx-auth")
+		{
+			acfxRoute.POST("/register", controller.AcfxRegister)
+		}
+		// pfee 添加短信接口入口
+		winloadSmsRoute := apiRouter.Group("/acfx-sms")
 		winloadSmsRoute.Use()
 		{
-			winloadSmsRoute.POST("", controller.CreateUser)
-			winloadSmsRoute.GET("/:id", controller.GetUser)
-			winloadSmsRoute.PUT("/:id", controller.UpdateUser)
-			winloadSmsRoute.DELETE("/:id", controller.DeleteUser)
 			winloadSmsRoute.GET("", controller.SendSmsCode)
 		}
 

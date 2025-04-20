@@ -225,10 +225,10 @@ const LoginForm = () => {
                     marginTop: 20,
                   }}
                 >
-                  <Text>
+                  {/* <Text>
                     {t('没有账户？')}{' '}
                     <Link to='/register'>{t('点击注册')}</Link>
-                  </Text>
+                  </Text> */}
                   <Text>
                     {t('忘记密码？')} <Link to='/reset'>{t('点击重置')}</Link>
                   </Text>
