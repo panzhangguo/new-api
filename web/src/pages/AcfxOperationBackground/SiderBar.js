@@ -89,12 +89,13 @@ const SiderBar = () => {
     <>
       <Nav
         style={{
-          flexShrink: 0,
-          borderRadius: styleState.isMobile ? '0' : '12px',
+          boxShadow: '0 0px 8px rgba(0, 0, 0, 0.15)',
+          borderRight: '1px solid var(--semi-color-border)',
+          background: 'var(--semi-color-bg-1)',
+          borderRadius: styleState.isMobile ? '0' : '8px',
           position: 'relative',
           zIndex: 95,
           height: '100%',
-          width: '256px',
           overflowY: 'auto',
           WebkitOverflowScrolling: 'touch', // Improve scrolling on iOS devices
         }}

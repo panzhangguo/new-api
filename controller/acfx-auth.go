@@ -58,7 +58,7 @@ func AcfxRegister(c *gin.Context) {
 			return
 		}
 	}
-	exist, err := model.CheckUserExistOrDeleted(user.Username, user.Email)
+	exist, err := model.AcfxCheckUserExistOrDeleted(user.Username, user.MobilePhone)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
@@ -70,7 +70,7 @@ func AcfxRegister(c *gin.Context) {
 	if exist {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
-			"message": "用户名已存在，或已注销",
+			"message": "用户名/手机号已存在，或已注销",
 		})
 		return
 	}
@@ -86,7 +86,7 @@ func AcfxRegister(c *gin.Context) {
 			return
 		}
 
-		cacheCode, _ := common.RedisGet(user.MobilePhone)
+		cacheCode, _ := common.RedisGet(common.SmsEnum["REGISTER"] + user.MobilePhone)
 		if cacheCode != user.VerificationCode {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,

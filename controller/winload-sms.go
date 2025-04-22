@@ -33,6 +33,17 @@ func GenerateSmsCode(length int) string {
 
 func SendSmsCode(c *gin.Context) {
 	phone := c.Query("mobile_phone")
+	sms_mode := c.Query("sms_mode")
+
+	if sms_mode != common.SmsEnum["LOGIN"] &&
+		sms_mode != common.SmsEnum["REGISTER"] &&
+		sms_mode != common.SmsEnum["FORGET_PASSWORD"] {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "无效的短信验证码类型",
+		})
+		return
+	}
 
 	if !isValidMobile(phone) {
 		c.JSON(http.StatusOK, gin.H{
@@ -43,7 +54,7 @@ func SendSmsCode(c *gin.Context) {
 		return
 	}
 
-	sendedSmsCode, err := common.RedisGet(phone)
+	sendedSmsCode, err := common.RedisGet(sms_mode + phone)
 	if err != nil && err.Error() != "redis: nil" {
 		err = fmt.Errorf("failed to get smscode: %w", err) // 保留错误链信息
 		log.Printf("Error occurred: %v", err)
@@ -70,7 +81,7 @@ func SendSmsCode(c *gin.Context) {
 		return
 	}
 	// 60s内有效
-	common.RedisSet(phone, smsCode, time.Second*5)
+	common.RedisSet(sms_mode+phone, smsCode, time.Second*60)
 	c.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"message": "已生成验证码",

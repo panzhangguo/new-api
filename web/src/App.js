@@ -29,11 +29,11 @@ import Setup from './pages/Setup/index.js';
 import SetupCheck from './components/SetupCheck';
 /**pfee */
 import AcfxOperationBackground from './pages/AcfxOperationBackground/index.js';
-import WinloadTeamManage from './pages/WinloadTeamManage/index.js';
-import WinloadAccount from './pages/WinloadAccount/index.js';
-import WinloadMyTeam from './pages/WinloadMyTeam/index.js';
-import AcfxAddTeam from './components/winload/AddTeam.js';
-import WinloadMyTeamApi from './pages/WinloadMyTeamApi/index.js';
+import AcfxTeamManage from './pages/AcfxTeamManage/index.js';
+import AcfxAccount from './pages/AcfxAccount/index.js';
+import AcfxMyTeam from './pages/AcfxMyTeam/index.js';
+import AcfxAddTeam from './components/acfx/AddTeam.js';
+import AcfxMyTeamApi from './pages/AcfxMyTeamApi/index.js';
 /**pfee */
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -293,14 +293,14 @@ function App() {
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <WinloadTeamManage />
+                  <AcfxTeamManage />
                 </Suspense>
               </PrivateRoute>
             }
           />
         </Route>
         {/* pfee 添加账号管理路由 个人信息由控制台迁移到个账号人中心 */}
-        <Route path='/account' element={<WinloadAccount />} >
+        <Route path='/account' element={<AcfxAccount />} >
           <Route
             path='/account/personal'
             element={
@@ -326,7 +326,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <WinloadMyTeam />
+                  <AcfxMyTeam />
                 </Suspense>
               </PrivateRoute>
             }
@@ -346,7 +346,7 @@ function App() {
             element={
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
-                  <WinloadMyTeamApi />
+                  <AcfxMyTeamApi />
                 </Suspense>
               </PrivateRoute>
             }

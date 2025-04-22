@@ -47,7 +47,7 @@ import {
 import TelegramLoginButton from 'react-telegram-login';
 import { useTranslation } from 'react-i18next';
 import { isOperationChatsShow, isPersinoalInviteShow, isPersionalEmailShow, isPersionalGenerateAccessTokenShow, isPersionalGithubShow, isPersionalLinuxDOShow, isPersionalNotificationShow, isPersionalOIDCShow, isPersionalTelegramShow, isPersionalWecharShow } from '../expand/config';
-import JoinTeam from './winload/JoinTeam';
+import JoinTeam from './acfx/JoinTeam';
 
 const PersonalSetting = () => {
   const [userState, userDispatch] = useContext(UserContext);

@@ -15,15 +15,14 @@ const OperationBackground = () => {
                 border: 'none',
                 paddingRight: '0',
                 height: '100%',
-                width: '256px',
             }}>
                 <SiderBar></SiderBar>
             </Layout.Sider>
             <Layout.Content
                 style={{
                     overflow: 'auto',
-                    marginLeft: '10px',
                     backgroundColor: 'var(--semi-color-bg-1)',
+                    border: '1px solid var(--semi-color-border)',
                     transition: 'margin-left 0.3s ease',
                     flex: '1 1 auto',
                     display: 'flex',

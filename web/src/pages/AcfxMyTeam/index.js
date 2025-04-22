@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import EmptyTeam from './EmptyTeam';
-import AddTeam from '../../components/winload/AddTeam';
+import AddTeam from '../../components/acfx/AddTeam';
 import { Spin } from '@douyinfe/semi-ui';
 import { API } from '../../helpers';
 import SelfTeam from './SelfTeam';

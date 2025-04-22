@@ -132,7 +132,7 @@ const LoginForm = () => {
             centered: true,
           });
         }
-        navigate('/console/token'); // pfee 路由添加控制台前缀
+        navigate('/token');
       } else {
         showError(message);
       }

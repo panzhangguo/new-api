@@ -26,12 +26,12 @@ import { renderGroupOption, truncateText } from '../../helpers/render.js';
 
 const roleInfo = {
   user: {
-    name: 'User',
+    name: '用户',
     avatar:
       'https://lf3-static.bytednsdoc.com/obj/eden-cn/ptlz_zlp/ljhwZthlaukjlkulzlp/docs-icon.png',
   },
   assistant: {
-    name: 'Assistant',
+    name: 'ACFX助手',
     avatar: 'logo.png',
   },
   system: {
@@ -74,7 +74,7 @@ const Playground = () => {
   const [userState, userDispatch] = useContext(UserContext);
   const [status, setStatus] = useState({});
   const [systemPrompt, setSystemPrompt] = useState(
-    'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.',
+    '你是一位乐于助人的助手。你可以通过回答我的问题来帮助我，也可以问我问题。',
   );
   const [message, setMessage] = useState(defaultMessage);
   const [models, setModels] = useState([]);
@@ -393,7 +393,7 @@ const Playground = () => {
               optionList={models}
             />
             <div style={{ marginTop: 10 }}>
-              <Typography.Text strong>Temperature：</Typography.Text>
+              <Typography.Text strong>温度：</Typography.Text>
             </div>
             <Slider
               step={0.1}
@@ -405,7 +405,7 @@ const Playground = () => {
               }}
             />
             <div style={{ marginTop: 10 }}>
-              <Typography.Text strong>MaxTokens：</Typography.Text>
+              <Typography.Text strong>上下文大小：</Typography.Text>
             </div>
             <Input
               placeholder='MaxTokens'
@@ -420,7 +420,7 @@ const Playground = () => {
             />
 
             <div style={{ marginTop: 10 }}>
-              <Typography.Text strong>System：</Typography.Text>
+              <Typography.Text strong>提示词：</Typography.Text>
             </div>
             <TextArea
               placeholder='System Prompt'

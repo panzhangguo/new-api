@@ -448,6 +448,14 @@ func (user2team *WinloadUserTeam) UpdateUser2TeamAuth(id int) error {
 }
 
 func (user2team *WinloadUserTeam) UpdateUser2TeamStatus(id int) error {
+	// 不允许对团队所有者进行操作
+	// 1. 查询团队所有者
+	team := WinloadUserTeam{}
+	DB.Where("id = ? AND user_id = ? AND  team_id = ?", id, user2team.UserId, user2team.TeamId).First(&team)
+	if team.IsOwner || team.Status == common.User2TeamStatus["Owner"] {
+		return errors.New("不允许对团队所有者进行操作")
+	}
+
 	if user2team.Status == common.User2TeamStatus["member"] {
 		updates := map[string]interface{}{
 			"status": user2team.Status,

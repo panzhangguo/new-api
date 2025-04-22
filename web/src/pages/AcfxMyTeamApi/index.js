@@ -6,7 +6,7 @@ const { Text } = Typography;
 const { Meta } = Card;
 const WinloadMyTeamApi = () => {
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: "20px", alignItems: 'center', padding: '30px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: "20px", alignItems: 'center'}}>
             <MyApiTable></MyApiTable>
             <MyTeamApiBox></MyTeamApiBox>
         </div>

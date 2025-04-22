@@ -9,3 +9,9 @@ var User2TeamStatus = map[string]int{
 	"member":  2,  // 正式成员
 	"joining": 3,  // 加入中。。待审核
 }
+
+var SmsEnum = map[string]string{
+	"LOGIN":           "login",
+	"REGISTER":        "register",
+	"FORGET_PASSWORD": "forget_password",
+}

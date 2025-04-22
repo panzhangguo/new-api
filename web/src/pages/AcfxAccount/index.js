@@ -15,7 +15,7 @@ const Account = () => {
                 border: 'none',
                 paddingRight: '0',
                 height: '100%',
-                width: '256px',
+                flexShrink: 0,
             }}>
                 <AccountSiderBar></AccountSiderBar>
             </Layout.Sider>
