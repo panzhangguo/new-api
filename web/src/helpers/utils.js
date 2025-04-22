@@ -23,7 +23,7 @@ export function isRoot() {
 
 export function getSystemName() {
   let system_name = localStorage.getItem('system_name');
-  if (!system_name) return '万榕信息'; // pfee 修改logo名称
+  if (!system_name) return 'ACFX奥晨分享'; // pfee 修改logo名称
   return system_name;
 }
 

@@ -34,6 +34,8 @@ import AcfxAccount from './pages/AcfxAccount/index.js';
 import AcfxMyTeam from './pages/AcfxMyTeam/index.js';
 import AcfxAddTeam from './components/acfx/AddTeam.js';
 import AcfxMyTeamApi from './pages/AcfxMyTeamApi/index.js';
+import AcfxKnowledge from './pages/AcfxKnowledge/index.js';
+import AcfxKnowledgeSetting from './pages/AcfxKnowledge/Setting.js';
 /**pfee */
 const Home = lazy(() => import('./pages/Home'));
 const Detail = lazy(() => import('./pages/Detail'));
@@ -183,7 +185,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        {/* pfee 添加控制器父路由 */}
         <Route
           path='/login'
           element={
@@ -347,6 +348,26 @@ function App() {
               <PrivateRoute>
                 <Suspense fallback={<Loading></Loading>} key={location.pathname}>
                   <AcfxMyTeamApi />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/account/knowledge'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <AcfxKnowledge />
+                </Suspense>
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path='/account/knowledge-setting'
+            element={
+              <PrivateRoute>
+                <Suspense fallback={<Loading></Loading>} key={location.pathname}>
+                  <AcfxKnowledgeSetting />
                 </Suspense>
               </PrivateRoute>
             }

@@ -2,16 +2,9 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
-  IconCalendarClock, IconChecklistStroked,
-  IconComment, IconCommentStroked,
+  IconBookmark,
   IconCreditCard,
-  IconGift, IconHelpCircle,
-  IconHistogram,
-  IconHome,
-  IconImage,
   IconKey,
-  IconLayers,
-  IconPriceTag,
   IconSetting,
   IconUser,
   IconUserGroup
@@ -70,6 +63,8 @@ const routerMap = {
   personal: '/account/personal',
   "my-team": '/account/my-team',
   'my-team-api': '/account/my-team-api',
+  'knowledge-setting': '/account/knowledge-setting',
+  konwledge: '/account/knowledge',
 };
 
 const AccountSiderBar = () => {
@@ -85,16 +80,16 @@ const AccountSiderBar = () => {
   const financeItems = useMemo(
     () => [
       {
-        text: t('钱包'),
-        itemKey: 'topup',
-        to: '/account/topup',
-        icon: <IconCreditCard />,
-      },
-      {
         text: t('个人设置'),
         itemKey: 'personal',
         to: '/account/personal',
         icon: <IconUser />,
+      },
+      {
+        text: t('钱包'),
+        itemKey: 'topup',
+        to: '/account/topup',
+        icon: <IconCreditCard />,
       },
     ],
     [t],
@@ -118,10 +113,28 @@ const AccountSiderBar = () => {
     [t],
   );
 
+  const knowledgeItems = useMemo(
+    () => [
+      {
+        text: t('设置'),
+        itemKey: 'knowledge-setting',
+        to: '/account/knowledge-setting',
+        icon: <IconSetting />,
+      },
+      {
+        text: t('知识库'),
+        itemKey: 'konwledge',
+        to: '/account/knowledge',
+        icon: <IconBookmark />,
+      },
+    ],
+    [t],
+  );
+
   // 使用useMemo一次性计算所有图标样式
   const iconStyles = useMemo(() => {
     const styles = {};
-    ['personal', 'topup', 'my-team', 'my-team-api'].forEach(key => {
+    ['personal', 'topup', 'my-team', 'my-team-api', 'knowledge-setting', 'konwledge'].forEach(key => {
       styles[key] = iconStyle(key, selectedKeys);
     });
     return styles;
@@ -179,6 +192,17 @@ const AccountSiderBar = () => {
 
         <Text style={groupLabelStyle}>{t('团队管理')}</Text>
         {teamItems.map((item) => (
+          <Nav.Item
+            key={item.itemKey}
+            itemKey={item.itemKey}
+            text={item.text}
+            icon={React.cloneElement(item.icon, { style: iconStyles[item.itemKey] })}
+            className={item.className}
+          />
+        ))}
+
+        <Text style={groupLabelStyle}>{t('知识库管理')}</Text>
+        {knowledgeItems.map((item) => (
           <Nav.Item
             key={item.itemKey}
             itemKey={item.itemKey}
