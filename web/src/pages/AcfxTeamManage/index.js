@@ -4,7 +4,6 @@ import { API, showError, showSuccess } from '../../helpers';
 import { Banner, Card, Avatar, Space, Button, Typography, Tag, Modal } from '@douyinfe/semi-ui';
 import { SERVER_ATTACHMENT_URL } from '../../expand/env';
 const TeamManage = () => {
-  const flag = useRef(true);
 
   const [teams, setTeams] = useState([]);
   const [team, setTeam] = useState([]);
@@ -26,10 +25,6 @@ const TeamManage = () => {
     />
   );
   useEffect(() => {
-    if (flag.current) {
-      flag.current = false;
-      return;
-    }
     API.get(`/api/winload-team/all_teams`).then(res => {
       const { success, data, message } = res.data
       if (success) {
@@ -49,7 +44,7 @@ const TeamManage = () => {
     API.get(`/api/winload-team/` + id).then(res => {
       const { success, data, message } = res.data
       if (success) {
-        setTeam(data)
+        setTeam(data.items[0])
         return
       }
       showError(message)

@@ -9,6 +9,7 @@ type WinloadTeamUser struct {
 	Username            string    `json:"username"`
 	DisplayName         string    `json:"display_name"`
 	UpdatedAt           time.Time `json:"updated_at"`
+	CreatedAt           time.Time `json:"created_at"`
 	Status              int       `json:"status"`
 	IsOwner             bool      `json:"is_owner"`
 	Editable            bool      `json:"editable"`              // 人员是否有编辑权限

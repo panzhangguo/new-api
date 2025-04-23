@@ -102,7 +102,7 @@ func (team *WinloadTeam) Insert() error {
 		Editable:            true,
 		JoiningApprovalAble: true,
 		InAuthorizedGroup:   true,
-		Status:              common.User2TeamStatus["Owner"],
+		Status:              common.User2TeamStatus["owner"],
 	}
 	if err := tx.Create(&relation).Error; err != nil {
 		tx.Rollback()
@@ -314,7 +314,7 @@ func SearchTeamUsers(keyword string, status int, teamId int, startIdx int, num i
 	return teamUsers, total, nil
 }
 
-// 查询团队所有成员
+// 查询
 func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) {
 	// var users []*User
 	var teamUsers []*dto.WinloadTeamUser
@@ -324,7 +324,7 @@ func GetAllTeamUsersByTeamId(teamId int) ([]*dto.WinloadTeamUser, int64, error) 
 	// 构建基础查询
 	query := DB.Model(&WinloadUserTeam{})
 
-	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able, winload_user_teams.clear_teamuser_able, winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.updated_at").
+	query.Select("winload_user_teams.id, users.username, users.display_name, winload_user_teams.user_id, winload_user_teams.team_id, winload_user_teams.editable, winload_user_teams.joining_approval_able, winload_user_teams.clear_teamuser_able, winload_user_teams.in_authorized_group, winload_user_teams.status, winload_user_teams.is_owner, winload_user_teams.created_at, winload_user_teams.updated_at").
 		Joins("left join users on winload_user_teams.user_id = users.id")
 
 	query = query.Where("winload_user_teams.team_id = (?)", teamId)

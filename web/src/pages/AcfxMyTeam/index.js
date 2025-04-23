@@ -7,13 +7,14 @@ import SelfTeam from './SelfTeam';
 import { Outlet } from "react-router-dom"
 
 const MyTeam = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isEmpty, setEmpty] = useState(true);
   const [isFormVisiable, setFormVisiable] = useState(false);
   const [teams, setTeams] = useState([]);
-  const flag = useRef(true);
+  // const flag = useRef(true);
 
   const init = async () => {
+    setLoading(true);
     const res = await API.get('/api/winload-team/self_all').finally(() => {
       setLoading(false);
     });
@@ -22,16 +23,14 @@ const MyTeam = () => {
     if (success && data.length > 0) {
       setEmpty(false)
       setTeams(data)
+    } else {
+      setEmpty(true)
     }
 
     return data;
   }
 
   useEffect(() => {
-    if (flag.current) {
-      flag.current = false;
-      return;
-    }
     init()
   }, []);
 

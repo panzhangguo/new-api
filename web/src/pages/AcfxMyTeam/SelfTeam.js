@@ -72,7 +72,6 @@ const SelfTeam = (props) => {
     const AuthTableRef = useRef();
     const [codeSpinning, setCodeSpinning] = useState(false);
     const [activeKey, setActiveKey] = useState('1');
-    const flag = useRef(true);
 
     // const [isOwner] = useState(props.teams[0]['is_owner']);
     const searchMember = () => {
@@ -186,10 +185,6 @@ const SelfTeam = (props) => {
     };
 
     useEffect(() => {
-        if (flag.current) {
-            flag.current = false;
-            return;
-        }
         setTeamInfo(createDescription(selectedTeam.team));
         searchMember();
     }, [selectedTeam, userStatus]);
