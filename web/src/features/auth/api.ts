@@ -39,6 +39,9 @@ import type {
   Login2FAResponse,
   TwoFAPayload,
   RegisterPayload,
+  EnterpriseRegisterPayload,
+  EnterpriseJoinPayload,
+  EnterpriseInvitation,
   ApiResponse,
 } from './types'
 
@@ -283,3 +286,41 @@ export async function bindEmail(
   )
   return res.data
 }
+
+/** wr Enterprise start */
+
+// Resolve the company and department names behind an invitation link.
+export async function getEnterpriseInvitation(params: {
+  aff: string
+  enterprise: string
+  organization: string
+}): Promise<ApiResponse<EnterpriseInvitation>> {
+  const res = await api.get('/api/user/invitation', {
+    params,
+    skipAuthRefresh: true,
+    skipBusinessError: true,
+    skipErrorHandler: true,
+  })
+  return res.data
+}
+
+// Create an account and join the invited company department in one request.
+export async function registerEnterprise(
+  payload: EnterpriseRegisterPayload
+): Promise<ApiResponse> {
+  const res = await api.post(`/api/user/register/enterprise`, payload, {
+    params: { turnstile: payload.turnstile ?? '' },
+    skipAuthRefresh: true,
+  })
+  return res.data
+}
+
+// Join the invited company department with an existing signed-in account.
+export async function joinEnterprise(
+  payload: EnterpriseJoinPayload
+): Promise<ApiResponse<{ already_joined: boolean }>> {
+  const res = await api.post(`/api/user/enterprises/join`, payload)
+  return res.data
+}
+
+/** wr Enterprise end */

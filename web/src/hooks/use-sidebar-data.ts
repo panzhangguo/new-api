@@ -36,6 +36,10 @@ import {
   User,
   Users,
   Wallet,
+  /** wr Enterprise start */
+  Building2,
+  Network,
+  /** wr Enterprise end */
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -178,6 +182,24 @@ export function useSidebarData(): SidebarData {
           },
         ],
       },
+      /** wr Enterprise start */
+      {
+        id: 'enterprise',
+        title: t('Enterprise'),
+        items: [
+          {
+            title: t('Overview'),
+            url: '/enterprise/overview',
+            icon: Building2,
+          },
+          {
+            title: t('Organization Management'),
+            url: '/enterprise/organizations',
+            icon: Network,
+          },
+        ],
+      },
+      /** wr Enterprise end */
     ],
   }
 }

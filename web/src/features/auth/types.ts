@@ -219,3 +219,21 @@ export interface CustomOAuthProviderInfo {
 export interface AuthFormProps extends React.HTMLAttributes<HTMLFormElement> {
   redirectTo?: string
 }
+
+/** wr Enterprise start */
+export interface EnterpriseRegisterPayload extends RegisterPayload {
+  enterprise_id: number
+  organization_id: number
+}
+
+export interface EnterpriseJoinPayload {
+  aff_code: string
+  enterprise_id: number
+  organization_id: number
+}
+
+export interface EnterpriseInvitation {
+  enterprise_name: string
+  organization_name: string
+}
+/** wr Enterprise end */

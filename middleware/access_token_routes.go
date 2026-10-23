@@ -104,6 +104,16 @@ var accessTokenRouteRules = map[string]accessTokenRouteRule{
 	"POST /api/user/checkin":                       accessTokenScopeRule("wallet:write"),
 	"GET /api/user/oauth/bindings":                 accessTokenScopeRule("account_security:read"),
 	"DELETE /api/user/oauth/bindings/:provider_id": accessTokenScopeRule("account_security:write"),
+	/** wr Enterprise start */
+	"GET /api/user/enterprises":                                       accessTokenScopeRule("profile:read"),
+	"POST /api/user/enterprises":                                      accessTokenScopeRule("profile:write"),
+	"PUT /api/user/enterprises/:id":                                   accessTokenScopeRule("profile:write"),
+	"GET /api/user/enterprises/:id/organizations":                     accessTokenScopeRule("profile:read"),
+	"POST /api/user/enterprises/:id/organizations":                    accessTokenScopeRule("profile:write"),
+	"PUT /api/user/enterprises/:id/organizations/:orgId":              accessTokenScopeRule("profile:write"),
+	"GET /api/user/enterprises/:id/organizations/:orgId/members":      accessTokenScopeRule("profile:read"),
+	"PUT /api/user/enterprises/:id/organizations/:orgId/members/move": accessTokenScopeRule("profile:write"),
+	/** wr Enterprise end */
 
 	// router/api-router.go: /api/user (admin)
 	"GET /api/user/":                                   accessTokenScopeRule("user:read"),

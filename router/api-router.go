@@ -90,6 +90,11 @@ func SetApiRouter(router *gin.Engine) {
 			userRoute.GET("/epay/notify", controller.EpayNotify)
 			userRoute.GET("/groups", controller.GetUserGroups)
 
+			/** wr Enterprise start */
+			userRoute.POST("/register/enterprise", middleware.CriticalRateLimit(), anonymousRequestBodyLimit, middleware.TurnstileCheck(), controller.RegisterEnterpriseMember)
+			userRoute.GET("/invitation", middleware.CriticalRateLimit(), middleware.DisableCache(), controller.GetEnterpriseInvitation)
+			/** wr Enterprise end */
+
 			selfRoute := userRoute.Group("/")
 			selfRoute.Use(middleware.DisableCache(), middleware.UserAuth())
 			{
@@ -148,6 +153,22 @@ func SetApiRouter(router *gin.Engine) {
 				// Custom OAuth bindings
 				selfRoute.GET("/oauth/bindings", controller.GetUserOAuthBindings)
 				selfRoute.DELETE("/oauth/bindings/:provider_id", controller.UnbindCustomOAuth)
+
+				/** wr Enterprise start */
+				enterpriseRoute := selfRoute.Group("/enterprises")
+				enterpriseRoute.Use(middleware.DisableCache())
+				{
+					enterpriseRoute.GET("", controller.ListUserEnterprises)
+					enterpriseRoute.POST("", middleware.CriticalRateLimit(), controller.CreateUserEnterprise)
+					enterpriseRoute.POST("/join", middleware.CriticalRateLimit(), controller.JoinEnterpriseByInvitation)
+					enterpriseRoute.PUT("/:id", middleware.CriticalRateLimit(), controller.UpdateUserEnterprise)
+					enterpriseRoute.GET("/:id/organizations", controller.ListUserOrganizations)
+					enterpriseRoute.POST("/:id/organizations", middleware.CriticalRateLimit(), controller.CreateUserOrganization)
+					enterpriseRoute.PUT("/:id/organizations/:orgId", middleware.CriticalRateLimit(), controller.UpdateUserOrganization)
+					enterpriseRoute.GET("/:id/organizations/:orgId/members", controller.ListOrganizationMembers)
+					enterpriseRoute.PUT("/:id/organizations/:orgId/members/move", middleware.CriticalRateLimit(), controller.MoveOrganizationMembers)
+				}
+				/** wr Enterprise end */
 			}
 
 			adminRoute := userRoute.Group("/")
