@@ -29,14 +29,43 @@ import vi from './locales/vi.json'
 import zhTW from './locales/zh-TW.json'
 import zhCN from './locales/zh.json'
 
+/** wr Enterprise start */
+import enWr from './locales/wr/en.json'
+import frWr from './locales/wr/fr.json'
+import jaWr from './locales/wr/ja.json'
+import ruWr from './locales/wr/ru.json'
+import viWr from './locales/wr/vi.json'
+import zhTWWr from './locales/wr/zh-TW.json'
+import zhCNWr from './locales/wr/zh.json'
+/** wr Enterprise end */
+
+/**
+ * Enterprise console messages are kept in their own files so upstream locale
+ * files stay mergeable, and are merged into the flat translation namespace at
+ * runtime so `t('Source text')` calls keep working. `sync-i18n.mjs` only scans
+ * the top level of `locales/`, so it ignores the `wr/` directory.
+ */
+function withEnterpriseMessages<T extends { translation: object }>(
+  locale: T,
+  messages: Record<string, string>
+) {
+  return {
+    ...locale,
+    translation: {
+      ...messages,
+      ...locale.translation,
+    },
+  }
+}
+
 export const resources = {
-  en,
-  zhCN,
-  fr,
-  ru,
-  ja,
-  vi,
-  zhTW,
+  en: withEnterpriseMessages(en, enWr),
+  zhCN: withEnterpriseMessages(zhCN, zhCNWr),
+  fr: withEnterpriseMessages(fr, frWr),
+  ru: withEnterpriseMessages(ru, ruWr),
+  ja: withEnterpriseMessages(ja, jaWr),
+  vi: withEnterpriseMessages(vi, viWr),
+  zhTW: withEnterpriseMessages(zhTW, zhTWWr),
 } as const
 
 i18n
